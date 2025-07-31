@@ -1,52 +1,61 @@
 import React from "react";
 import { ProductCard } from "./productCard";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import { EmblaCarousel } from "../carousel";
 import { productItem } from "@/data/ProductData";
 
 export const ProductSlider = () => {
   return (
-    <Stack
-      direction="row"
+    <Grid
+      container
       sx={{
         width: "100%",
-        bgcolor: "Background.paper",
-        position: "relative",
         paddingBottom: "50px",
-        justifyContent: "space-between",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
-      <Stack
-        sx={{
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          paddingX: "55px",
-        }}
-      >
-        <Typography noWrap color="background.paper">
-          Kết thúc sau ... ngày
-        </Typography>
-      </Stack>
-
-      <Stack>
+      <Grid size={2.2}>
         <Stack
-          sx={{ alignItems: "end", padding: "24px 15px", maxWidth: "96%" }}
+          sx={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h6" color="background.paper">
+            Kết thúc sau ... ngày
+          </Typography>
+        </Stack>
+      </Grid>
+
+      <Grid flex={1}>
+        <Stack
+          sx={{
+            alignItems: "end",
+            padding: "24px 14px",
+            width: "100%",
+          }}
         >
           <Typography
             variant="subtitle2"
+            component={"h2"}
             color="background.paper"
             sx={{ fontWeight: 500, cursor: "pointer" }}
           >
             {"Xem tất cả >"}
           </Typography>
         </Stack>
-        <EmblaCarousel>
-          {productItem.slice(0, 8).map((item) => (
-            <ProductCard item={item} />
-          ))}
-        </EmblaCarousel>
-      </Stack>
-    </Stack>
+        <Box
+          sx={{
+            width: "100%",
+            paddingX: "8px",
+          }}
+        >
+          <EmblaCarousel space="16" count={5} list={productItem.slice(0, 8)}>
+            {(item) => <ProductCard item={item} />}
+          </EmblaCarousel>
+        </Box>
+      </Grid>
+    </Grid>
   );
 };

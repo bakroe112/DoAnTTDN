@@ -13,6 +13,9 @@ export const EmblaCarousel = ({
   RightComponent,
   dot,
   loop,
+  count,
+  list,
+  space,
 }) => {
   const [onHover, setonHover] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -30,10 +33,34 @@ export const EmblaCarousel = ({
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi);
   return (
-    <Box sx={{ overflow: "hidden",position:"relative", maxWidth: "97%" }} ref={emblaRef}>
-      
+    <Box
+      sx={{ overflow: "hidden", position: "relative" }}
+      className="embla__viewport"
+      ref={emblaRef}
+    >
       {/* children component */}
-      <Box sx={{ display: "flex" }}>{children}</Box>
+      <Box
+        sx={{
+          display: "flex",
+          backfaceVisibility: "hidden",
+          marginLeft: `-${space}px`,
+          touchAction: "pan-y pinch-zoom",
+        }}
+        className="embla__container"
+      >
+        {list.map((item) => (
+          <Box
+            className="embla__slide"
+            sx={{
+              flex: `0 0 ${100 / count}%`,
+              minWidth: 0,
+              paddingLeft: `${space}px`,
+            }}
+          >
+            {children(item)}
+          </Box>
+        ))}
+      </Box>
 
       {/* Right left Button */}
       <Stack

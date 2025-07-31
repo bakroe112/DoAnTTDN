@@ -6,6 +6,7 @@ import { HeaderHelmet } from "@/components/header";
 import { ProductSlider } from "@/components/productSlider";
 import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
+import { ProductSection } from "./section/productSection";
 
 export const LandingPage = () => {
   const [value, setValue] = useState(0);
@@ -28,6 +29,8 @@ export const LandingPage = () => {
         <EmblaCarousel
           dot="true"
           loop="true"
+          count="1"
+          list={BannerItem}
           LeftComponent={
             <Box
               sx={{
@@ -47,28 +50,25 @@ export const LandingPage = () => {
             </Box>
           }
         >
-          {BannerItem.map((item) => (
-            <Box
+          {(item) => (
+            <img
+              src={item.imageUrl}
+              alt={item.label}
               key={item.id}
-              sx={{
-                flex: "0 0 auto",
-                minWidth: 0,
-              }}
-            >
-              <img
-                src={item.imageUrl}
-                alt={item.label}
-                className="size-full object-cover"
-              />
-            </Box>
-          ))}
+              className="size-full object-cover"
+            />
+          )}
         </EmblaCarousel>
       </Box>
 
-      {/* Sale */}
-      <Box
+      {/* Main LandingPage */}
+      <Stack
         component="section"
-        sx={{ bgcolor: "background.neutral", padding: "40px 240px" }}
+        sx={{
+          bgcolor: "background.neutral",
+          padding: "40px 240px",
+          gap: "30px",
+        }}
       >
         {/* Sale slider */}
         <Box
@@ -113,7 +113,6 @@ export const LandingPage = () => {
         <Box
           sx={{
             width: "100%",
-            mt: "30px",
             backgroundImage: `url(
               "https://lh3.googleusercontent.com/SJsmGX8n_CnmPVRxLNJ9LGylqwyBL1gBTJuQUfkxfOcF_4v8Z4ALvmxlI51aeUhbnLcHDolkwnxPvq_g2CbNwFU9hG0lmjE=rw-w1920"
             )`,
@@ -125,13 +124,17 @@ export const LandingPage = () => {
           <Box
             sx={{
               bgcolor: "white",
+              borderRadius: "5px 5px 0px 0px",
             }}
           >
             <Tabs
               variant="fullWidth"
               value={value}
               onChange={handleChange}
-              sx={{ bgcolor: "Background.paper" }}
+              sx={{
+                bgcolor: "Background.paper",
+                borderRadius: "5px 5px 0px 0px",
+              }}
               selectionFollowsFocus
               TabIndicatorProps={{ style: { display: "none" } }}
             >
@@ -157,8 +160,12 @@ export const LandingPage = () => {
               <Tab
                 label={
                   <Box>
-                    <Typography variant="h5" fontWeight="700">Linh kiện</Typography>
-                    <Typography variant="captiontext" fontWeight="600">Giảm sốc 65%</Typography>
+                    <Typography variant="h5" fontWeight="700">
+                      Linh kiện
+                    </Typography>
+                    <Typography variant="captiontext" fontWeight="600">
+                      Giảm sốc 65%
+                    </Typography>
                   </Box>
                 }
                 sx={{
@@ -172,8 +179,12 @@ export const LandingPage = () => {
               <Tab
                 label={
                   <Box>
-                    <Typography variant="h5" fontWeight="700">Màn hình</Typography>
-                    <Typography variant="captiontext" fontWeight="600">Giảm sốc 23%</Typography>
+                    <Typography variant="h5" fontWeight="700">
+                      Màn hình
+                    </Typography>
+                    <Typography variant="captiontext" fontWeight="600">
+                      Giảm sốc 23%
+                    </Typography>
                   </Box>
                 }
                 sx={{
@@ -187,8 +198,12 @@ export const LandingPage = () => {
               <Tab
                 label={
                   <Box>
-                    <Typography variant="h5" fontWeight="700">Gear</Typography>
-                    <Typography variant="captiontext" fontWeight="600">Giảm sốc 43%</Typography>
+                    <Typography variant="h5" fontWeight="700">
+                      Gear
+                    </Typography>
+                    <Typography variant="captiontext" fontWeight="600">
+                      Giảm sốc 43%
+                    </Typography>
                   </Box>
                 }
                 sx={{
@@ -202,8 +217,21 @@ export const LandingPage = () => {
               <Tab
                 label={
                   <Box>
-                    <Typography variant="h5" fontWeight="700">Camera - Phụ kiện</Typography>
-                    <Typography variant="captiontext" fontWeight="600">Giảm sốc 70%</Typography>
+                    <Typography
+                      variant="h5"
+                      fontWeight="700"
+                      sx={{
+                        display: "-webkit-box",
+                        overflow: "hidden",
+                        WebkitLineClamp: 1,
+                        WebkitBoxOrient: "vertical",
+                      }}
+                    >
+                      Camera - Phụ kiện
+                    </Typography>
+                    <Typography variant="captiontext" fontWeight="600">
+                      Giảm sốc 70%
+                    </Typography>
                   </Box>
                 }
                 sx={{
@@ -217,8 +245,12 @@ export const LandingPage = () => {
               <Tab
                 label={
                   <Box>
-                    <Typography variant="h5" fontWeight="700">Điện gia dụng</Typography>
-                    <Typography variant="captiontext" fontWeight="600">Giảm sốc 50%</Typography>
+                    <Typography variant="h5" fontWeight="700">
+                      Điện gia dụng
+                    </Typography>
+                    <Typography variant="captiontext" fontWeight="600">
+                      Giảm sốc 50%
+                    </Typography>
                   </Box>
                 }
                 sx={{
@@ -251,7 +283,96 @@ export const LandingPage = () => {
             <ProductSlider />
           </CustomTabPanel>
         </Box>
-      </Box>
+
+        {/* Categoty list */}
+        <Box
+          sx={{ bgcolor: "background.paper", p: "16px", borderRadius: "5px" }}
+        >
+          <Typography
+            variant="h6"
+            sx={{ paddingBottom: "20px", fontWeight: 800 }}
+          >
+            Danh mục nổi bật
+          </Typography>
+
+          <EmblaCarousel
+            count={10}
+            list={[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+            space="44"
+          >
+            {(item) => (
+              <Stack sx={{ alignItems: "center", gap: "8px" }}>
+                <img
+                  src="https://lh3.googleusercontent.com/7ltR_x7umrC6a4IYEKTvsQXLAF5mQnwQhU-ClYdGyGoAqaB_zXwtn145dYrep47ZAoF8IJlz4yocnYC9dEZWPH618r4SFxiJ=rw"
+                  className=" object-cover size-full"
+                  alt=""
+                />
+                Laptop
+              </Stack>
+            )}
+          </EmblaCarousel>
+        </Box>
+
+        {/* Image tech list */}
+        <Box
+          sx={{ bgcolor: "background.paper", p: "16px", borderRadius: "5px" }}
+        >
+          <Typography
+            variant="h6"
+            sx={{ paddingBottom: "20px", fontWeight: 800 }}
+          >
+            Danh mục nổi bật
+          </Typography>
+
+          <EmblaCarousel
+            count={4}
+            list={[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+            space="44"
+            loop="true"
+          >
+            {(item) => (
+              <Stack sx={{ alignItems: "center", gap: "8px" }}>
+                <img
+                  src="https://lh3.googleusercontent.com/Cp88WJkAsVHE6gGSoHlem07dslNj7n7f2QyHBso2HVW81tGNr08IOONWZSbZiEUboWDRhsBxBjGa-01uz4XiJnwNH3FQMwOQ=w400-rw"
+                  className="object-cover rounded-[10px] hover:scale-105 transition"
+                  alt=""
+                />
+                <Typography
+                  sx={{
+                    display: "-webkit-box",
+                    overflow: "hidden",
+                    WebkitLineClamp: 1,
+                    WebkitBoxOrient: "vertical",
+                  }}
+                >
+                  Laptop
+                </Typography>
+              </Stack>
+            )}
+          </EmblaCarousel>
+        </Box>
+
+        {/* Ad image */}
+        <Box>
+          <img
+            src="https://lh3.googleusercontent.com/dnzu37gM4r0A_UZUkgJ2_xELYA_RJboYUEv5GZvoVzS15q9kJTJiYPYI1_bJuHfN-V_mQgN-DFWnINIARvACEs75PVlz0AU=w1232-rw"
+            className="object-cover size-full hover:scale-105 transition rounded-[10px] duration-300"
+            alt=""
+          />
+        </Box>
+
+        <Box
+          sx={{
+            backgroundImage:
+              "url('https://lh3.googleusercontent.com/xskupSpD9GawQhJQMm7O6vs7CehOkGhsXUBc_n0PSO0ZT9dMECEzWeQsyDAMbk_BV-kupn3IYip2hD0xdkC7vn0jjhl6Tcc=w1232')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <ProductSection />
+        </Box>
+      </Stack>
     </Box>
   );
 };
