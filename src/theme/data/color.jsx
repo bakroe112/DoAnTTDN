@@ -57,7 +57,8 @@ export const blue_sky = {
 export const primary = {
   lighter: "#CEE6FE",
   light: "#6EAAFC",
-  main: "#1061F6",
+  // main: "#1061F6",
+  main: "#1435C3",
   dark: "#0837B1",
   darker: "#031A76",
 };

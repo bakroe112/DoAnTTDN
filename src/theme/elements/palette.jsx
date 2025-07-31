@@ -56,6 +56,10 @@ const action = {
   disabledOpacity: 0.48,
 };
 
+const hover = {
+  lightDark: alpha(grey[900], 0.25),
+};
+
 const colorDefault = blue;
 
 const base = {
@@ -69,19 +73,21 @@ const base = {
   custom,
   divider: alpha(grey[500], 0.2),
   action,
+  hover,
 };
 
 // ----------------------------------------------------------------------
 
 export function Palette() {
   return {
-    primary: {
-      lighter: "#fff1e3",
-      light: "#f3e3d4",
-      main: "#e3aa74",
-      dark: "#bf9b79",
-      darker: "#734021",
-    },
+    primary: primary,
+    // {
+    //   lighter: "#fff1e3",
+    //   light: "#f3e3d4",
+    //   main: "#e3aa74",
+    //   dark: "#bf9b79",
+    //   darker: "#734021",
+    // },
     ...base,
     gradient: "linear-gradient(to left, #333, #333)",
     common: {

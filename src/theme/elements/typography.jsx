@@ -54,6 +54,12 @@ export const typography = {
     fontWeight: "500",
     letterSpacing: 0,
   },
+  h9: {
+    fontSize: "16px",
+    lineHeight: "22px",
+    fontWeight: "400",
+    letterSpacing: 0,
+  },
   subtitle1: {
     fontSize: "18px",
     lineHeight: "24px",

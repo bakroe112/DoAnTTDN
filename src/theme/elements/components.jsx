@@ -142,6 +142,13 @@ const ComponentsCustom = (shadows, palette, typography) => {
         },
       },
     },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          textTransform: "none", // ✅ Không viết HOA nữa
+        },
+      },
+    },
   };
 };
 

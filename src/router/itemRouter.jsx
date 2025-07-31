@@ -1,7 +1,7 @@
 import React from "react";
 import { createBrowserRouter } from "react-router";
 import { ClientLayout } from "../layouts";
-import { LandingPage } from "../pages/client/landingPage/landingPage";
+import { LandingPage } from "@/pages/client/landingPage";
 
 export const itemRouter = createBrowserRouter([
   {

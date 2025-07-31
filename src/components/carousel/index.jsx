@@ -2,15 +2,23 @@
 import { alpha, Box, Button, IconButton, Stack } from "@mui/material";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { BannerItem } from "./BannerItem";
 import { DotButton, useDotButton } from "./EmblaCarouselDotButton";
 import { Icon } from "@iconify-icon/react";
 
-export const EmblaCarousel = ({ children, LeftComponent, RightComponent }) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay({ playOnInit: true, delay: 3000 }),
-  ]);
+export const EmblaCarousel = ({
+  children,
+  LeftComponent,
+  RightComponent,
+  dot,
+  loop,
+}) => {
+  const [onHover, setonHover] = useState(false);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: "start" },
+    [Autoplay({ playOnInit: loop, delay: 3000 })]
+  );
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
   }, [emblaApi]);
@@ -22,43 +30,61 @@ export const EmblaCarousel = ({ children, LeftComponent, RightComponent }) => {
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi);
   return (
-    <Box component="section" position="relative">
-      <Box sx={{ overflow: "hidden" }} ref={emblaRef}>
-        <Box sx={{ display: "flex" }}>{children}</Box>
-        <Stack
-          direction="row"
+    <Box sx={{ overflow: "hidden",position:"relative", maxWidth: "97%" }} ref={emblaRef}>
+      
+      {/* children component */}
+      <Box sx={{ display: "flex" }}>{children}</Box>
+
+      {/* Right left Button */}
+      <Stack
+        direction="row"
+        sx={{
+          width: "100%",
+          alignItems: "center",
+          position: "absolute",
+          height: "100%",
+          top: 0,
+        }}
+        onMouseEnter={() => {
+          setonHover(true);
+        }}
+        onMouseLeave={() => {
+          setonHover(false);
+        }}
+      >
+        {LeftComponent}
+        <IconButton
+          onClick={scrollPrev}
           sx={{
-            width: "100%",
-            alignItems: "center",
-            position: "absolute",
-            height: "100%",
-            top: 0,
+            zIndex: "1000",
+            display: onHover ? "" : "none",
+            bgcolor: "hover.lightDark",
           }}
         >
-          {LeftComponent}
-          <IconButton
-            onClick={scrollPrev}
-            color="#9f9f9f"
-            sx={{ zIndex: "1000" }}
-          >
-            <Icon
-              icon="solar:alt-arrow-left-line-duotone"
-              width="24"
-              height="24"
-            />
-          </IconButton>
-          <div className="flex-1"></div>
-          <IconButton onClick={scrollNext} color="#9f9f9f">
-            <Icon
-              icon="solar:alt-arrow-right-line-duotone"
-              width="24"
-              height="24"
-            />
-          </IconButton>
+          <Icon
+            icon="solar:alt-arrow-left-line-duotone"
+            width="24"
+            height="24"
+            style={{ color: "white" }}
+          />
+        </IconButton>
+        <div className="flex-1"></div>
+        <IconButton
+          onClick={scrollNext}
+          sx={{ display: onHover ? "" : "none", bgcolor: "hover.lightDark" }}
+        >
+          <Icon
+            icon="solar:alt-arrow-right-line-duotone"
+            width="24"
+            height="24"
+            style={{ color: "white" }}
+          />
+        </IconButton>
 
-          {RightComponent}
-        </Stack>
+        {RightComponent}
+      </Stack>
 
+      {dot && (
         <Stack
           direction="row"
           sx={{
@@ -84,7 +110,7 @@ export const EmblaCarousel = ({ children, LeftComponent, RightComponent }) => {
             ></Box>
           ))}
         </Stack>
-      </Box>
+      )}
     </Box>
   );
 };

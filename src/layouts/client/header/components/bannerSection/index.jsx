@@ -56,7 +56,7 @@ export const BannerSection = () => {
         paddingX="120px"
         paddingY="14px"
         width="100%"
-        bgcolor="#1435C3"
+        bgcolor="primary.main"
         height="42px"
         alignItems="center"
         justifyContent="center"
@@ -73,7 +73,7 @@ const BannerItem = ({ item }) => {
   return (
     <Stack component={Link} to={item.link} direction="row" spacing="6px">
       <Icon icon={item.icon} width="18" height="18" className="text-white" />
-      <Typography fontSize="13px" color="white">
+      <Typography fontSize="13px" color="background.paper">
         {item.title}
       </Typography>
     </Stack>
