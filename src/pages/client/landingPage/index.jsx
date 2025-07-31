@@ -4,9 +4,21 @@ import { CategoryListItem } from "@/components/categoryList";
 import { CustomTabPanel } from "@/components/customTabPanel/CustomTabPanel";
 import { HeaderHelmet } from "@/components/header";
 import { ProductSlider } from "@/components/productSlider";
-import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Grid,
+  Pagination,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 import { ProductSection } from "./section/productSection";
+import { Icon } from "@iconify-icon/react";
+import { ProductCard } from "@/components/productSlider/productCard";
+import { productItem } from "@/data/ProductData";
 
 export const LandingPage = () => {
   const [value, setValue] = useState(0);
@@ -61,7 +73,7 @@ export const LandingPage = () => {
         </EmblaCarousel>
       </Box>
 
-      {/* Main LandingPage */}
+      {/* * Main LandingPage */}
       <Stack
         component="section"
         sx={{
@@ -284,7 +296,7 @@ export const LandingPage = () => {
           </CustomTabPanel>
         </Box>
 
-        {/* Categoty list */}
+        {/* Categoty slider */}
         <Box
           sx={{ bgcolor: "background.paper", p: "16px", borderRadius: "5px" }}
         >
@@ -313,7 +325,7 @@ export const LandingPage = () => {
           </EmblaCarousel>
         </Box>
 
-        {/* Image tech list */}
+        {/* Image tech slider */}
         <Box
           sx={{ bgcolor: "background.paper", p: "16px", borderRadius: "5px" }}
         >
@@ -361,6 +373,7 @@ export const LandingPage = () => {
           />
         </Box>
 
+        {/* Product slider */}
         <Box
           sx={{
             backgroundImage:
@@ -370,7 +383,185 @@ export const LandingPage = () => {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <ProductSection />
+          <ProductSection title="PC" />
+        </Box>
+
+        {/* Product slider */}
+        <Box
+          sx={{
+            backgroundImage:
+              "url('https://lh3.googleusercontent.com/xskupSpD9GawQhJQMm7O6vs7CehOkGhsXUBc_n0PSO0ZT9dMECEzWeQsyDAMbk_BV-kupn3IYip2hD0xdkC7vn0jjhl6Tcc=w1232')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <ProductSection title="Linh kiện" />
+        </Box>
+
+        {/* Ad image */}
+        <Box>
+          <img
+            src="https://lh3.googleusercontent.com/_gvYKVfDSEnexBdDanPl4kYr5Za0iU79GXluIjuxBI6d_9oy6DLKUq44J2yV38XAiwm7Zk8jJs3Ep7viPoTckU9W8gnepokatQ=w1232-rw"
+            className="object-cover size-full hover:scale-105 transition rounded-[10px] duration-300"
+            alt=""
+          />
+        </Box>
+
+        {/* Product slider */}
+        <Box
+          sx={{
+            backgroundImage:
+              "url('https://lh3.googleusercontent.com/xskupSpD9GawQhJQMm7O6vs7CehOkGhsXUBc_n0PSO0ZT9dMECEzWeQsyDAMbk_BV-kupn3IYip2hD0xdkC7vn0jjhl6Tcc=w1232')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <ProductSection title="Laptop Ai" />
+        </Box>
+
+        {/* Ad image */}
+        <Box>
+          <img
+            src="https://lh3.googleusercontent.com/_gvYKVfDSEnexBdDanPl4kYr5Za0iU79GXluIjuxBI6d_9oy6DLKUq44J2yV38XAiwm7Zk8jJs3Ep7viPoTckU9W8gnepokatQ=w1232-rw"
+            className="object-cover size-full hover:scale-105 transition rounded-[10px] duration-300"
+            alt=""
+          />
+        </Box>
+
+        {/* Product slider */}
+        <Box
+          sx={{
+            backgroundImage:
+              "url('https://lh3.googleusercontent.com/xskupSpD9GawQhJQMm7O6vs7CehOkGhsXUBc_n0PSO0ZT9dMECEzWeQsyDAMbk_BV-kupn3IYip2hD0xdkC7vn0jjhl6Tcc=w1232')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <ProductSection title="Laptop văn phòng" />
+        </Box>
+
+        {/* Product slider */}
+        <Box
+          sx={{
+            backgroundImage:
+              "url('https://lh3.googleusercontent.com/xskupSpD9GawQhJQMm7O6vs7CehOkGhsXUBc_n0PSO0ZT9dMECEzWeQsyDAMbk_BV-kupn3IYip2hD0xdkC7vn0jjhl6Tcc=w1232')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <ProductSection title="Gaming gear" />
+        </Box>
+
+        {/* Ad image */}
+        <Box>
+          <Stack direction="row" sx={{ gap: "24px" }}>
+            <img
+              src="https://lh3.googleusercontent.com/cuuNbwKuXSbDEC60PYrgUw8HrsOv7IhOAgzQf_FAJQ9PS3VVUhnGqic9v_G3Y160br2R39KGIL_Qk0AtAfd6T2js023830o=w411-rw"
+              className="object-cover size-full hover:scale-105 transition rounded-[10px] duration-300"
+              alt=""
+            />
+            <img
+              src="https://lh3.googleusercontent.com/2mJvP_eadXIWuZaAMXt388xRld0zMOXtxO1FoK35wYuf341Gvs_E-tG4a1FVw6dzTKfyNMN1nLVrNzgzRkRC_jehSaPfwR4=w411-rw"
+              className="object-cover size-full hover:scale-105 transition rounded-[10px] duration-300"
+              alt=""
+            />
+            <img
+              src="https://lh3.googleusercontent.com/7IRVxK5KFgNHCmZP5R7J_SqQHXGyKYUXGHSQ9n5YwMTaZr4FOZT9H1gl7FUkSmmQQzORGpHeeHgEF1gwNu5wKEzdsVHe-8MeIQ=w411-rw"
+              className="object-cover size-full hover:scale-105 transition rounded-[10px] duration-300"
+              alt=""
+            />
+          </Stack>
+        </Box>
+
+        {/* Product section */}
+        <Box sx={{ bgcolor: "background.paper", borderRadius: "5px" }}>
+          <Stack>
+            <Stack
+              direction="row"
+              sx={{
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "20px 24px",
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  color: "primary",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                }}
+              >
+                sản phẩm nổi bật
+              </Typography>
+              <Stack
+                direction="row"
+                sx={{
+                  alignItems: "center",
+                  color: "text.disabled",
+                  cursor: "pointer",
+                }}
+              >
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  Xem tất cả{" "}
+                </Typography>
+                <Icon
+                  icon="solar:alt-arrow-right-linear"
+                  width="18"
+                  height="18"
+                />
+              </Stack>
+            </Stack>
+            <Divider sx={{ bgcolor: "white" }} />
+
+            <Stack
+              sx={{
+                py: "20px",
+                alignItems: "center",
+                gap: "24px",
+              }}
+            >
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid
+                  container
+                  spacing={2}
+                  columns={25}
+                  sx={{
+                    justifyContent: "center",
+                  }}
+                >
+                  {productItem.map((item) => (
+                    <Grid size="5">
+                      <ProductCard
+                        item={item}
+                        height={460}
+                        width={240}
+                        radius={0}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+              <Pagination
+                color="primary"
+                count={19}
+                variant="outlined"
+                shape="rounded"
+                siblingCount={2}
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    mx: 0.7,
+                    fontSize:"14px",
+                    fontWeight:600
+                  },
+                }}
+              />
+            </Stack>
+          </Stack>
         </Box>
       </Stack>
     </Box>

@@ -1,6 +1,7 @@
 import { CategoryListItem } from "@/components/categoryList";
 import { Icon } from "@iconify-icon/react/dist/iconify.js";
 import {
+  alpha,
   Box,
   Button,
   Collapse,
@@ -73,7 +74,7 @@ export const HeaderSection = () => {
 
   const handleScrolled = () => {
     setIsScrolled(window.scrollY > 0);
-    if (window.scrollY > 0) {
+    if (window.scrollY === 0) {
       setOnClick(false);
     }
   };
@@ -180,12 +181,29 @@ export const HeaderSection = () => {
         </Stack>
       </Stack>
       {onClick && isScrolled && (
-        <CategoryListItem
-          sx={{
-            position: "absolute",
-          }}
-          borderRadius="0px 0px 10px 10px"
-        />
+        <Box>
+          <Box
+            sx={{
+              position: "fixed",
+              top: 113,
+              left: 0,
+              width: "100%",
+              height: "90vh",
+              bgcolor: alpha("#000", 0.5),
+              zIndex: 999999,
+            }}
+            onClick={() => setOnClick(false)}
+          ></Box>
+          <CategoryListItem
+            sx={{
+              position: "fixed",
+              top: 113,
+              zIndex: 1000000,
+              bgcolor: "white",
+            }}
+            borderRadius="0px 0px 10px 10px"
+          />
+        </Box>
       )}
     </Box>
   );

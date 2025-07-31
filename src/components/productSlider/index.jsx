@@ -3,6 +3,7 @@ import { ProductCard } from "./productCard";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { EmblaCarousel } from "../carousel";
 import { productItem } from "@/data/ProductData";
+import { Icon } from "@iconify-icon/react";
 
 export const ProductSlider = () => {
   return (
@@ -36,14 +37,19 @@ export const ProductSlider = () => {
             width: "100%",
           }}
         >
-          <Typography
-            variant="subtitle2"
-            component={"h2"}
-            color="background.paper"
-            sx={{ fontWeight: 500, cursor: "pointer" }}
+          <Stack
+            direction="row"
+            sx={{
+              alignItems: "center",
+              color: "background.paper",
+              cursor: "pointer",
+            }}
           >
-            {"Xem tất cả >"}
-          </Typography>
+            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+              Xem tất cả{" "}
+            </Typography>
+            <Icon icon="solar:alt-arrow-right-linear" width="18" height="18" />
+          </Stack>
         </Stack>
         <Box
           sx={{
@@ -52,7 +58,7 @@ export const ProductSlider = () => {
           }}
         >
           <EmblaCarousel space="16" count={5} list={productItem.slice(0, 8)}>
-            {(item) => <ProductCard item={item} />}
+            {(item) => <ProductCard height={420} radius={5} item={item} />}
           </EmblaCarousel>
         </Box>
       </Grid>

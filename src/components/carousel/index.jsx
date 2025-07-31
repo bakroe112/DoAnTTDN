@@ -16,6 +16,7 @@ export const EmblaCarousel = ({
   count,
   list,
   space,
+  button,
 }) => {
   const [onHover, setonHover] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -63,53 +64,55 @@ export const EmblaCarousel = ({
       </Box>
 
       {/* Right left Button */}
-      <Stack
-        direction="row"
-        sx={{
-          width: "100%",
-          alignItems: "center",
-          position: "absolute",
-          height: "100%",
-          top: 0,
-        }}
-        onMouseEnter={() => {
-          setonHover(true);
-        }}
-        onMouseLeave={() => {
-          setonHover(false);
-        }}
-      >
-        {LeftComponent}
-        <IconButton
-          onClick={scrollPrev}
+      {!button && (
+        <Stack
+          direction="row"
           sx={{
-            zIndex: "1000",
-            display: onHover ? "" : "none",
-            bgcolor: "hover.lightDark",
+            width: "100%",
+            alignItems: "center",
+            position: "absolute",
+            height: "100%",
+            top: 0,
+          }}
+          onMouseEnter={() => {
+            setonHover(true);
+          }}
+          onMouseLeave={() => {
+            setonHover(true);
           }}
         >
-          <Icon
-            icon="solar:alt-arrow-left-line-duotone"
-            width="24"
-            height="24"
-            style={{ color: "white" }}
-          />
-        </IconButton>
-        <div className="flex-1"></div>
-        <IconButton
-          onClick={scrollNext}
-          sx={{ display: onHover ? "" : "none", bgcolor: "hover.lightDark" }}
-        >
-          <Icon
-            icon="solar:alt-arrow-right-line-duotone"
-            width="24"
-            height="24"
-            style={{ color: "white" }}
-          />
-        </IconButton>
+          {LeftComponent}
+          <IconButton
+            onClick={scrollPrev}
+            sx={{
+              zIndex: "1000",
+              display: onHover ? "" : "none",
+              bgcolor: "hover.lightDark",
+            }}
+          >
+            <Icon
+              icon="solar:alt-arrow-left-line-duotone"
+              width="24"
+              height="24"
+              style={{ color: "white" }}
+            />
+          </IconButton>
+          <div className="flex-1"></div>
+          <IconButton
+            onClick={scrollNext}
+            sx={{ display: onHover ? "" : "none", bgcolor: "hover.lightDark" }}
+          >
+            <Icon
+              icon="solar:alt-arrow-right-line-duotone"
+              width="24"
+              height="24"
+              style={{ color: "white" }}
+            />
+          </IconButton>
 
-        {RightComponent}
-      </Stack>
+          {RightComponent}
+        </Stack>
+      )}
 
       {dot && (
         <Stack
