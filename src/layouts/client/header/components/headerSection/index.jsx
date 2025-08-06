@@ -227,8 +227,8 @@ const HeaderSectionItem = ({ item }) => {
     >
       <Icon icon={item.icon} width="32" height="32" />
       <Stack>
-        <Typography fontSize="13px">{item.title1}</Typography>
-        <Typography fontSize="13px">{item.title2}</Typography>
+        <Typography variant="captiontext">{item.title1}</Typography>
+        <Typography variant="captiontext">{item.title2}</Typography>
       </Stack>
     </Stack>
   );

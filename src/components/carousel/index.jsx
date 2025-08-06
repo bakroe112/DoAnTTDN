@@ -35,9 +35,15 @@ export const EmblaCarousel = ({
     useDotButton(emblaApi);
   return (
     <Box
-      sx={{ overflow: "hidden", position: "relative" }}
+      sx={{ overflow: "hidden", position: "relative", width: "100%" }}
       className="embla__viewport"
       ref={emblaRef}
+      onMouseEnter={() => {
+        setonHover(true);
+      }}
+      onMouseLeave={() => {
+        setonHover(false);
+      }}
     >
       {/* children component */}
       <Box
@@ -64,55 +70,61 @@ export const EmblaCarousel = ({
       </Box>
 
       {/* Right left Button */}
-      {!button && (
-        <Stack
-          direction="row"
+      <Stack
+        direction="row"
+        sx={{
+          alignItems: "center",
+          position: "absolute",
+          height: "100%",
+          top: 0,
+          left: 0,
+        }}
+      >
+        {LeftComponent}
+        <IconButton
+          onClick={scrollPrev}
           sx={{
-            width: "100%",
-            alignItems: "center",
-            position: "absolute",
-            height: "100%",
-            top: 0,
-          }}
-          onMouseEnter={() => {
-            setonHover(true);
-          }}
-          onMouseLeave={() => {
-            setonHover(true);
+            zIndex: 1000,
+            display: onHover ? "" : "none",
+            bgcolor: "hover.lightDark",
           }}
         >
-          {LeftComponent}
-          <IconButton
-            onClick={scrollPrev}
-            sx={{
-              zIndex: "1000",
-              display: onHover ? "" : "none",
-              bgcolor: "hover.lightDark",
-            }}
-          >
-            <Icon
-              icon="solar:alt-arrow-left-line-duotone"
-              width="24"
-              height="24"
-              style={{ color: "white" }}
-            />
-          </IconButton>
-          <div className="flex-1"></div>
-          <IconButton
-            onClick={scrollNext}
-            sx={{ display: onHover ? "" : "none", bgcolor: "hover.lightDark" }}
-          >
-            <Icon
-              icon="solar:alt-arrow-right-line-duotone"
-              width="24"
-              height="24"
-              style={{ color: "white" }}
-            />
-          </IconButton>
+          <Icon
+            icon="solar:alt-arrow-left-line-duotone"
+            width="24"
+            height="24"
+            style={{ color: "white" }}
+          />
+        </IconButton>
+      </Stack>
 
-          {RightComponent}
-        </Stack>
-      )}
+      <Stack
+        direction="row"
+        sx={{
+          alignItems: "center",
+          position: "absolute",
+          height: "100%",
+          top: 0,
+          right: 0,
+        }}
+      >
+        <IconButton
+          onClick={scrollNext}
+          sx={{
+            display: onHover ? "" : "none",
+            bgcolor: "hover.lightDark",
+          }}
+        >
+          <Icon
+            icon="solar:alt-arrow-right-line-duotone"
+            width="24"
+            height="24"
+            style={{ color: "white" }}
+          />
+        </IconButton>
+
+        {RightComponent}
+      </Stack>
 
       {dot && (
         <Stack

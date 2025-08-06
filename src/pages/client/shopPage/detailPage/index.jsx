@@ -7,11 +7,19 @@ import {
   Button,
   Divider,
   Grid,
+  Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { ProductSection } from "../../landingPage/section/productSection";
 
 export const DetailPage = () => {
   const onHoverImage = {
@@ -21,13 +29,15 @@ export const DetailPage = () => {
     borderRadius: "5px",
   };
 
+  const [getHeight, setGetHeight] = useState(true);
+
   const [getImageUrl, setGetImageUrl] = useState("");
   const productInfoImage = productDetailData.productInfo.imageUrl;
   return (
     <Box sx={{ bgcolor: "background.neutral" }}>
       <Box sx={{ p: "20px 240px" }}>
         <Stack sx={{ gap: "30px" }}>
-          {/* Head */}
+          {/* Top */}
           <Box>
             <Stack sx={{ paddingBottom: "20px" }}>
               <Breadcrumbs
@@ -89,7 +99,7 @@ export const DetailPage = () => {
                         ))}
                       </Stack>
                       <Divider />
-                      <Stack sx={{ gap: "5px" }}>
+                      <Stack sx={{ gap: "5px", p: "8px" }}>
                         <Typography variant="body2">
                           - Kích thước: 22" (1920 x 1080), Tỷ lệ 16:9
                         </Typography>
@@ -107,7 +117,7 @@ export const DetailPage = () => {
                         </Typography>
                       </Stack>
                       <Typography
-                        variant="body1"
+                        variant="body2"
                         sx={{ color: "primary.light", cursor: "pointer" }}
                       >
                         Xem thông tin chi tiết
@@ -122,20 +132,25 @@ export const DetailPage = () => {
                           icon="arcticons:zalo"
                           width="32"
                           height="32"
-                          className="text-[#1435C3]"
+                          className="text-[#1435C3] cursor-pointer"
                         />
-                        <Icon icon="devicon:facebook" width="32" height="32" />
+                        <Icon
+                          icon="devicon:facebook"
+                          width="32"
+                          height="32"
+                          className="cursor-pointer"
+                        />
                         <Icon
                           icon="material-symbols:share-outline"
                           width="32"
                           height="32"
-                          className="text-[#1435C3]"
+                          className="text-[#1435C3] cursor-pointer"
                         />
                       </Stack>
                     </Stack>
                   </Box>
 
-                  <Box>
+                  <Box p="10px">
                     <Stack sx={{ gap: "10px" }}>
                       <Typography variant="h4">
                         Màn hình Samsung LS22C310EAEXXV 22" (FHD 1920 x 1080/
@@ -227,6 +242,7 @@ export const DetailPage = () => {
                         <Stack sx={{ marginLeft: "-26px", gap: "8px" }}>
                           <Stack direction="row">
                             <Typography
+                              variant="body2"
                               component={"li"}
                               sx={{
                                 textAlign: "-webkit-match-parent",
@@ -243,6 +259,7 @@ export const DetailPage = () => {
                           </Stack>
                           <Stack direction="row">
                             <Typography
+                              variant="body2"
                               component={"li"}
                               sx={{
                                 textAlign: "-webkit-match-parent",
@@ -259,6 +276,7 @@ export const DetailPage = () => {
                           </Stack>
                           <Stack direction="row">
                             <Typography
+                              variant="body2"
                               component={"li"}
                               sx={{
                                 textAlign: "-webkit-match-parent",
@@ -275,6 +293,7 @@ export const DetailPage = () => {
                           </Stack>
                           <Stack direction="row">
                             <Typography
+                              variant="body2"
                               component={"li"}
                               sx={{
                                 textAlign: "-webkit-match-parent",
@@ -291,6 +310,7 @@ export const DetailPage = () => {
                           </Stack>
                           <Stack direction="row">
                             <Typography
+                              variant="body2"
                               component={"li"}
                               sx={{
                                 textAlign: "-webkit-match-parent",
@@ -306,6 +326,7 @@ export const DetailPage = () => {
                           </Stack>
                           <Stack direction="row">
                             <Typography
+                              variant="body2"
                               component={"li"}
                               sx={{
                                 textAlign: "-webkit-match-parent",
@@ -423,31 +444,149 @@ export const DetailPage = () => {
             </Grid>
           </Box>
 
-          {/* Body */}
-          <Box
-            sx={{
-              bgcolor: "background.paper",
-              p: "20px",
-              borderRadius: "5px",
-            }}
-          >
-            <Typography variant="h3" sx={{ marginBottom: "16px" }}>
-              Mô tả sản phẩm
-            </Typography>
-            <Box
-              dangerouslySetInnerHTML={{
-                __html: productDetailData.productDetail.description,
-              }}
-              sx={{
-                ".image": {
-                  display: "table",
-                  clear:"both",
-                  alignItems:"center",
-                  margin:"10px auto",
-                  minWidth:"50px"
-                },
-              }}
-            ></Box>
+          {/* Middle */}
+          <Grid container spacing={3}>
+            <Grid size={8}>
+              <Box
+                sx={{
+                  bgcolor: "background.paper",
+                  p: "20px",
+                  borderRadius: "5px",
+                  maxHeight: getHeight == true ? "800px" : "100%",
+                  overflow: "hidden",
+                  transition: "0.3s",
+                }}
+              >
+                <Typography
+                  variant="h4"
+                  sx={{ marginBottom: "16px", fontWeight: "700" }}
+                >
+                  Mô tả sản phẩm
+                </Typography>
+                <Box
+                  dangerouslySetInnerHTML={{
+                    __html: productDetailData.productDetail.description,
+                  }}
+                  sx={{
+                    ".image": {
+                      display: "table",
+                      textAlign: "center",
+                      margin: "10px auto",
+                      minWidth: "50px",
+                      bgcolor: "background.neutral",
+                    },
+                    figcaption: {
+                      padding: "9px",
+                    },
+                  }}
+                ></Box>
+              </Box>
+              <Stack
+                direction="row"
+                sx={{
+                  bgcolor: "background.paper",
+                  p: "20px",
+                  color: "primary.main",
+                  justifyContent: "center",
+                }}
+              >
+                <Stack
+                  direction="row"
+                  sx={{
+                    cursor: "pointer",
+                    alignItems: "center",
+                    gap: "3px",
+                  }}
+                  onClick={() => setGetHeight(!getHeight)}
+                >
+                  <Typography variant="body2">
+                    {getHeight == true
+                      ? "Xem thêm nội dung"
+                      : "Thu gọn nội dung"}
+                  </Typography>
+                  {getHeight == true ? (
+                    <Icon
+                      icon="solar:alt-arrow-down-line-duotone"
+                      width="16"
+                      height="16"
+                    />
+                  ) : (
+                    <Icon
+                      icon="solar:alt-arrow-up-line-duotone"
+                      width="16"
+                      height="16"
+                    />
+                  )}
+                </Stack>
+              </Stack>
+            </Grid>
+
+            <Grid size={4}>
+              <Box
+                sx={{
+                  bgcolor: "background.paper",
+                  p: "20px",
+                  borderRadius: "5px",
+                }}
+              >
+                <Typography variant="h4" sx={{ fontWeight: "700" }}>
+                  Thông tin chi tiết
+                </Typography>
+
+                {/* Table */}
+                <Paper sx={{ overflow: "hidden" }}>
+                  <TableContainer sx={{ maxHeight: "600px" }}>
+                    <Table sx={{ minWidth: 300 }}>
+                      {/* table head */}
+                      <TableHead>
+                        <TableRow>
+                          <TableCell></TableCell>
+                          <TableCell align="right"></TableCell>
+                        </TableRow>
+                      </TableHead>
+
+                      {/* table body */}
+                      <TableBody>
+                        {productDetailData.productDetail.attributeGroups.map(
+                          (item) => (
+                            <TableRow
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                                ".MuiTableCell-root": {
+                                  textAlign: "left",
+                                  color: item.parentId === 0 && "#82869e",
+                                  bgcolor:
+                                    item.parentId === 0 && "background.neutral",
+                                  fontWeight: item.parentId === 0 && 600,
+                                  fontSize: "15px",
+                                },
+                              }}
+                            >
+                              <TableCell component="th" scope="row">
+                                {item.name}
+                              </TableCell>
+                              <TableCell
+                                align="right"
+                                dangerouslySetInnerHTML={{
+                                  __html: item.value,
+                                }}
+                              ></TableCell>
+                            </TableRow>
+                          )
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Paper>
+              </Box>
+            </Grid>
+          </Grid>
+
+          {/* Bottom */}
+          <Box sx={{ bgcolor: "background.paper" }}>
+            <ProductSection title="Sản phẩm liên quan" colorFont="black" />
           </Box>
         </Stack>
       </Box>

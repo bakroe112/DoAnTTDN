@@ -121,6 +121,13 @@ export const productDetailData = {
     },
     attributeGroups: [
       {
+        id: 34597,
+        name: "Thông tin chung",
+        value: "",
+        priority: 1,
+        parentId: 0,
+      },
+      {
         id: 0,
         name: "Thương hiệu",
         value: "Samsung",
@@ -134,13 +141,7 @@ export const productDetailData = {
         priority: -20,
         parentId: 34597,
       },
-      {
-        id: 34597,
-        name: "Thông tin chung",
-        value: "",
-        priority: 1,
-        parentId: 0,
-      },
+
       {
         id: 0,
         name: "Tên",

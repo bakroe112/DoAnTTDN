@@ -2,7 +2,6 @@ import { EmblaCarousel } from "@/components/carousel";
 import { BannerItem } from "@/components/carousel/BannerItem";
 import { CategoryListItem } from "@/components/categoryList";
 import { CustomTabPanel } from "@/components/customTabPanel/CustomTabPanel";
-import { HeaderHelmet } from "@/components/header";
 import { ProductSlider } from "@/components/productSlider";
 import {
   Box,
@@ -19,6 +18,7 @@ import { ProductSection } from "./section/productSection";
 import { Icon } from "@iconify-icon/react";
 import { ProductCard } from "@/components/productSlider/productCard";
 import { productItem } from "@/data/ProductData";
+import { HeaderHelmet } from "@/components/header";
 
 export const LandingPage = () => {
   const [value, setValue] = useState(0);
