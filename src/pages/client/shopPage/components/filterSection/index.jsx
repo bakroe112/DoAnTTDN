@@ -15,6 +15,7 @@ import {
 import React, { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Checkbox from "@mui/material/Checkbox";
+import { useSelector } from "react-redux";
 
 export const FilterSection = () => {
   const filter = new Intl.NumberFormat("vi-VN");
@@ -39,7 +40,16 @@ export const FilterSection = () => {
   };
 
   // height check
-  const [getHeightCheck, setGetHeightCheck] = useState(true);
+  const [more, setMore] = useState(false);
+
+  const product = useSelector((store) => store.products);
+  console.log("product", product);
+
+  const categories = product.products.categories;
+  console.log("categories", categories);
+
+  const { search } = window.location;
+  const searchParams = new URLSearchParams(search);
 
   return (
     <Stack p="10px" position="relative">
@@ -102,7 +112,7 @@ export const FilterSection = () => {
           <AccordionDetails
             sx={{
               mt: "-16px",
-              maxHeight: getHeightCheck ? "85px" : "100%",
+              maxHeight: more ? "100%" : "85px",
               overflow: "hidden",
             }}
           >
@@ -118,24 +128,15 @@ export const FilterSection = () => {
                 }
                 label="9Fit"
               />
-              <FormControlLabel control={<Checkbox />} label="9Fit" />
-              <FormControlLabel control={<Checkbox />} label="9Fit" />
-              <FormControlLabel control={<Checkbox />} label="9Fit" />
-              <FormControlLabel control={<Checkbox />} label="9Fit" />
-              <FormControlLabel control={<Checkbox />} label="9Fit" />
-              <FormControlLabel control={<Checkbox />} label="9Fit" />
-              <FormControlLabel control={<Checkbox />} label="9Fit" />
-              <FormControlLabel control={<Checkbox />} label="9Fit" />
-              <FormControlLabel control={<Checkbox />} label="9Fit" />
             </FormGroup>
           </AccordionDetails>
-          {getHeightCheck && (
+          {!more && (
             <Box
               component={Typography}
               variant="captiontext"
               color="primary.light"
               sx={{ cursor: "pointer" }}
-              onClick={() => setGetHeightCheck(false)}
+              onClick={() => setMore(true)}
               ml="56px"
             >
               Xem thêm

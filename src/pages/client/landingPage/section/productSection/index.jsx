@@ -1,6 +1,6 @@
 import { EmblaCarousel } from "@/components/carousel";
 import { ProductCard } from "@/components/productSlider/productCard";
-import { productItem } from "@/data/ProductData";
+import { productItem } from "@/data/ProductItem";
 import { Icon } from "@iconify-icon/react";
 import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";

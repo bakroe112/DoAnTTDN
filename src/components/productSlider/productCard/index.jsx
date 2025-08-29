@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import { productItem } from "@/data/ProductData";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 export const ProductCard = ({ item, radius, height, width }) => {

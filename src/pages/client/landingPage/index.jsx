@@ -17,8 +17,9 @@ import React, { useState } from "react";
 import { ProductSection } from "./section/productSection";
 import { Icon } from "@iconify-icon/react";
 import { ProductCard } from "@/components/productSlider/productCard";
-import { productItem } from "@/data/ProductData";
+import { productItem } from "@/data/ProductItem";
 import { HeaderHelmet } from "@/components/header";
+import { Link } from "react-router-dom";
 
 export const LandingPage = () => {
   const [value, setValue] = useState(0);
@@ -105,6 +106,8 @@ export const LandingPage = () => {
                   gap: "12px",
                   textAlign: "center",
                 }}
+                component={Link}
+                to={"shop/1112"}
               >
                 <img
                   src={item.image}

@@ -2,7 +2,7 @@ import React from "react";
 import { ProductCard } from "./productCard";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { EmblaCarousel } from "../carousel";
-import { productItem } from "@/data/ProductData";
+import { productItem } from "@/data/ProductItem";
 import { Icon } from "@iconify-icon/react";
 
 export const ProductSlider = () => {

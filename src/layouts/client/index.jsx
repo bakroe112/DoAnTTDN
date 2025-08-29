@@ -1,16 +1,45 @@
-import React from 'react'
-import ClientHeader from './header'
-import { Outlet } from 'react-router-dom'
-import { ClientFooter } from './footer'
-import { Divider } from '@mui/material'
+import React from "react";
+import ClientHeader from "./header";
+import { Outlet, useLocation } from "react-router-dom";
+import { ClientFooter } from "./footer";
+import { CircularProgress, Divider, Stack } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { getShopProduct } from "@/store/product/Action";
 
 export const ClientLayout = () => {
+  const dispatch = useDispatch();
+  const products = useSelector((store) => store.products);
+  const path = useLocation();
+  
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [path.pathname]);
+
+  React.useEffect(() => {
+    dispatch(getShopProduct());
+  }, [path.search]);
+
+  // console.log("products: ", products);
   return (
     <>
-      <ClientHeader />
-      <Outlet />
-      <ClientFooter />
+      {products.loading ? (
+        <Stack
+          sx={{
+            width: "100%",
+            height: "100vh",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </Stack>
+      ) : (
+        <>
+          <ClientHeader />
+          <Outlet />
+          <ClientFooter />
+        </>
+      )}
     </>
   );
-}
-
+};

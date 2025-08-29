@@ -1,5 +1,5 @@
 import { ProductCard } from "@/components/productSlider/productCard";
-import { productItem } from "@/data/ProductData";
+import { productItem } from "@/data/ProductItem";
 import { Icon } from "@iconify-icon/react";
 import {
   Box,
@@ -81,20 +81,6 @@ export const ProductSection = () => {
               ))}
             </Grid>
           </Box>
-          <Pagination
-            color="primary"
-            count={19}
-            variant="outlined"
-            shape="rounded"
-            siblingCount={2}
-            sx={{
-              "& .MuiPaginationItem-root": {
-                mx: 0.7,
-                fontSize: "14px",
-                fontWeight: 600,
-              },
-            }}
-          />
         </Stack>
       </Stack>
     </Box>

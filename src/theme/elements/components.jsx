@@ -101,38 +101,6 @@ const ComponentsCustom = (shadows, palette, typography) => {
         },
       },
     },
-    MuiPopover: {
-      defaultProps: {
-        sx: {
-          "& .MuiPaper-root": {
-            borderRadius: "8px",
-            boxShadow: "custom.card",
-            border: "1px solid",
-            borderColor: "divider",
-            "& .MuiList-root": {
-              paddingX: "4px",
-              paddingY: "4px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "4px",
-              "& .MuiButtonBase-root.MuiMenuItem-root": {
-                borderRadius: "8px",
-                paddingX: "8px",
-                gap: "12px",
-                fontSize: "14px",
-                lineHeight: "22px",
-                fontWeight: "400",
-                letterSpacing: 0,
-              },
-              "& svg": {
-                width: "14px",
-                height: "14px",
-              },
-            },
-          },
-        },
-      },
-    },
     MuiCard: {
       defaultProps: {
         sx: {
@@ -146,6 +114,14 @@ const ComponentsCustom = (shadows, palette, typography) => {
       styleOverrides: {
         root: {
           textTransform: "none", // ✅ Không viết HOA nữa
+        },
+      },
+    },
+    MuiIconButton: {
+      defaultProps: {
+        sx: {
+          backgroundColor: "#000", // trực tiếp, không cần selector
+          color: "#fff",
         },
       },
     },
