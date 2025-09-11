@@ -23,15 +23,16 @@ return new class extends Migration {
             // Basic info
             $table->string('name', 255);
             $table->string('image_url', 2048)->nullable();
+            $table->unsignedBigInteger('quantity')->nullable();
 
             // Prices (VND, không lẻ) -> dùng BIGINT
             $table->unsignedBigInteger('supplier_retail_price')->nullable();
-            $table->unsignedBigInteger('latest_price')->nullable();
+            // $table->unsignedBigInteger('latest_price')->nullable();
             $table->unsignedBigInteger('discount_amount')->nullable();
             $table->unsignedBigInteger('sell_price')->nullable();
 
             // % giảm giá (giữ 2 chữ số thập phân)
-            $table->decimal('discount_percent', 5, 2)->default(0);
+            // $table->decimal('discount_percent', 5, 2)->default(0);
 
             // Nội dung dài / HTML
             $table->longText('description')->nullable();
@@ -40,21 +41,6 @@ return new class extends Migration {
             // brand name
             $table->string('brand_name', 255);
             $table->string('brand_logo', 2048)->nullable();
-
-            // Các khóa ngoại
-            // $table->unsignedBigInteger('product_category_id');
-            // $table->foreign('product_category_id')->references('product_id')->on('product_categories')->cascadeOnDelete();
-
-            // $table->unsignedBigInteger('product_attributes_id');
-            // $table->foreign('product_attributes_id')->references('product_id')->on('product_attributes')->cascadeOnDelete();
-
-            // $table->unsignedBigInteger('product_images');
-            // $table->foreign('product_images_id')->references('product_id')->on('product_images')->cascadeOnDelete();
-
-            // $table->foreignIdFor(Brand::class)->constrained()->cascadeOnDelete();
-            // $table->foreignIdFor(ProductAttribute::class)->constrained()->cascadeOnDelete();
-            // $table->foreignIdFor(ProductImage::class)->constrained()->cascadeOnDelete();
-            // $table->foreignIdFor(Category::class)->constrained()->cascadeOnDelete();
 
             $table->timestamps();
         });

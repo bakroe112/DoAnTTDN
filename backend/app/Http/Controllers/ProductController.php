@@ -99,10 +99,9 @@ class ProductController extends Controller
         $product = Product::create([
             'sku' => $request->sku,
             'name' => $request->name,
+            'quantity' => $request->quantity,
             'supplier_retail_price' => $request->supplier_retail_price,
-            'latest_price' => $request->latest_price,
             'discount_amount' => $request->discount_amount,
-            'discount_percent' => $request->discount_percent,
             'sell_price' => $request->sell_price,
             'description' => $request->description,
             'short_description' => $request->short_description,
@@ -111,7 +110,13 @@ class ProductController extends Controller
             'image_url' => $request->image_url,
         ]);
 
-        return new ProductResource($product);
+        $product->categories()->attach($request->categories);
+        $product->attributes()->attach($request->input('attributes')); // Phải dùng vậy vì attributes là ParameterBag trong request
+
+        $product->images()->createMany(
+            collect($request->images)->map(fn($url) => ['url' => $url])->toArray()
+        );
+
     }
 
     /**
@@ -138,27 +143,13 @@ class ProductController extends Controller
     public function update(Request $request, $sku)
     {
         $product = Product::where('sku', $sku)->first();
-        // $validated = $request->validate([
-        //     'name' => 'sometimes|string|max:255',
-        //     'supplier_retail_price' => 'nullable|numeric',
-        //     'latest_price' => 'nullable|numeric',
-        //     'discount_amount' => 'nullable|numeric',
-        //     'discount_percent' => 'nullable|numeric',
-        //     'sell_price' => 'nullable|numeric',
-        //     'description' => 'nullable|string',
-        //     'short_description' => 'nullable|string',
-        //     'brand_name' => 'nullable|string|max:255',
-        //     'brand_logo' => 'nullable|string|max:2048',
-        //     'image_url' => 'nullable|string|max:2048',
-        // ]);
 
         $product->update([
             'sku' => $request->sku,
             'name' => $request->name,
+            'quantity' => $request->quantity,
             'supplier_retail_price' => $request->supplier_retail_price,
-            'latest_price' => $request->latest_price,
             'discount_amount' => $request->discount_amount,
-            'discount_percent' => $request->discount_percent,
             'sell_price' => $request->sell_price,
             'description' => $request->description,
             'short_description' => $request->short_description,
@@ -166,6 +157,17 @@ class ProductController extends Controller
             'brand_logo' => $request->brand_logo,
             'image_url' => $request->image_url,
         ]);
+        $product->categories()->sync($request->categories);
+        $product->attributes()->sync($request->input('attributes'));
+
+        if ($request->has('images')) {
+            // cách 1: xoá hết ảnh cũ, thêm lại từ đầu
+            $product->images()->delete();
+
+            $product->images()->createMany(
+                collect($request->images)->map(fn($url) => ['url' => $url])->toArray()
+            );
+        }
 
         return new ProductResource($product);
     }

@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('product_images', function (Blueprint $table) {
             $table->id();
              $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('image_id');
+            // $table->unsignedBigInteger('image_id');
+            $table->string('url');
             $table->foreign('product_id')->references('sku')->on('products')->onDelete('cascade');
-            $table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
+            // $table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
             $table->timestamps();
         });
     }

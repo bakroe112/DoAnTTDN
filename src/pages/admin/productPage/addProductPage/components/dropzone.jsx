@@ -13,23 +13,28 @@ import { useDropzone } from "react-dropzone";
 import ClearIcon from "@mui/icons-material/Clear";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
-export const Dropzone = () => {
+export const Dropzone = ({ onFilesChange }) => {
   const [files, setFiles] = React.useState([]);
 
-  const onDrop = React.useCallback((acceptedFiles) => {
-    setFiles((preFiles) => {
-      const newFile = acceptedFiles.filter(
-        (file) =>
-          !preFiles.some(
-            (f) =>
-              f.name === file.name &&
-              f.size === file.size &&
-              f.lastModified === file.lastModified
-          )
-      );
-      return [...preFiles, ...newFile];
-    });
-  }, []);
+  const onDrop = React.useCallback(
+    (acceptedFiles) => {
+      setFiles((preFiles) => {
+        const newFile = acceptedFiles.filter(
+          (file) =>
+            !preFiles.some(
+              (f) =>
+                f.name === file.name &&
+                f.size === file.size &&
+                f.lastModified === file.lastModified
+            )
+        );
+        const updatedFiles = [...preFiles, ...newFile];
+        onFilesChange?.(updatedFiles.map((f) => URL.createObjectURL(f)));
+        return updatedFiles;
+      });
+    },
+    [onFilesChange]
+  );
   const handleDeleteImage = (f) => {
     setFiles((preFiles) => preFiles.filter((file) => file !== f));
   };
@@ -114,7 +119,7 @@ export const Dropzone = () => {
           </Typography>
         </Stack>
       </Stack>
-      {console.log("files", files)}
+      {/* {console.log("files", files)} */}
       {files.length > 0 && (
         <Stack spacing={1}>
           <Stack direction="row" spacing={1} py="18px">

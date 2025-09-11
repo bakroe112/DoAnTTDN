@@ -21,6 +21,7 @@ class AttributeResource extends JsonResource
     {
         $this->withoutWrapping();
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'value' => $this->value,
             'parent_id' => $this->parent_id

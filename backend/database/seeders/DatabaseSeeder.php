@@ -59,22 +59,15 @@ class DatabaseSeeder extends Seeder
         $ten = Attribute::create(['name' => 'Tên', 'value' => 'LS22C310EAEXXV', 'parent_id' => $thongtinchung->id]);
         $kichthuoc = Attribute::create(['name' => 'Kích thước', 'value' => '22\"', 'parent_id' => $cauhinhchitiet->id]);
 
-        //Images
-        $image1 = Image::create(['url' => 'aaaaa']);
-        $image2 = Image::create(['url' => 'bbbb']);
-        $image3 = Image::create(['url' => 'cccc']);
-        $image4 = Image::create(['url' => 'dddd']);
-
         //Products
         $product1 = Product::create([
             'sku' => '1112',
             'name' => 'product1',
             'image_url' => 'url1',
+            'quantity' => '20',
             'supplier_retail_price' => 100000,
-            'latest_price' => 100000,
             'discount_amount' => 0,
             'sell_price' => 100000,
-            'discount_percent' => 0,
             'description' => 'something',
             'short_description' => 'something',
             'brand_name' => 'asus pro',
@@ -87,11 +80,10 @@ class DatabaseSeeder extends Seeder
             'sku' => '1113',
             'name' => 'product2',
             'image_url' => 'url2',
+            'quantity' => '20',
             'supplier_retail_price' => 100000,
-            'latest_price' => 100000,
             'discount_amount' => 0,
             'sell_price' => 100000,
-            'discount_percent' => 0,
             'description' => 'something',
             'short_description' => 'something',
             'brand_name' => 'Mac pro',
@@ -105,29 +97,29 @@ class DatabaseSeeder extends Seeder
             'product_id' => $product1->sku,
             'attribute_id' => $thongtinchung->id,
         ]);
-           $productAttri2 = ProductAttribute::create([
+        $productAttri2 = ProductAttribute::create([
             'product_id' => $product1->sku,
             'attribute_id' => $baohanh->id,
         ]);
 
         //Product Category
-            $productCate1 = ProductCategory::create([
+        $productCate1 = ProductCategory::create([
             'product_id' => $product1->sku,
             'category_id' => $laptop->id,
         ]);
-           $productCate2 = ProductCategory::create([
+        $productCate2 = ProductCategory::create([
             'product_id' => $product1->sku,
             'category_id' => $mac->id,
         ]);
 
-          //Product Image
-            $productImage1 = ProductImage::create([
+        //Product Image
+        $productImage1 = ProductImage::create([
             'product_id' => $product1->sku,
-            'image_id' => $image1->id,
+            'url' => "url123",
         ]);
-           $productImage2 = ProductImage::create([
+        $productImage2 = ProductImage::create([
             'product_id' => $product1->sku,
-            'image_id' => $image2->id,
+            'url' => "url345",
         ]);
     }
 }

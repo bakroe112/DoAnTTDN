@@ -5,6 +5,8 @@ import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import CategoryIcon from "@mui/icons-material/Category";
+import CrueltyFreeIcon from "@mui/icons-material/CrueltyFree";
 const NAVIGATION = [
   {
     kind: "header",
@@ -42,7 +44,30 @@ const NAVIGATION = [
   {
     segment: "admin/categories",
     title: "Categories",
-    icon: <InventoryIcon />,
+    icon: <CategoryIcon />,
+    children: [
+      {
+        segment: "",
+        title: "List",
+        icon: <SpaceDashboardIcon />,
+      },
+      {
+        segment: "create",
+        title: "Create",
+        icon: <AddIcon />,
+      },
+      {
+        segment: "update",
+        pattern: "update/:id",
+        title: "Edit",
+        icon: <EditIcon />,
+      },
+    ],
+  },
+  {
+    segment: "admin/attributes",
+    title: "Attributes",
+    icon: <CrueltyFreeIcon />,
     children: [
       {
         segment: "",

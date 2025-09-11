@@ -32,6 +32,21 @@ export const getAllCategories = () => async (dispatch) => {
     dispatch({ type: GET_ALL_CATEGORIES_FAILURE, payload: e });
   }
 };
+export const getCategoryTree = () => async (dispatch) => {
+  dispatch({ type: GET_ALL_CATEGORIES_REQUEST });
+  try {
+    axiosClient
+      .get("/categories")
+      .then((data) => {
+        dispatch({ type: GET_ALL_CATEGORIES_SUCCESS, payload: data.data });
+      })
+      .catch((e) => {
+        dispatch({ type: GET_ALL_CATEGORIES_FAILURE, payload: e });
+      });
+  } catch (error) {
+    dispatch({ type: GET_ALL_CATEGORIES_FAILURE, payload: e });
+  }
+};
 
 export const getCategory = (id) => async (dispatch) => {
   dispatch({ type: GET_CATEGORY_REQUEST });

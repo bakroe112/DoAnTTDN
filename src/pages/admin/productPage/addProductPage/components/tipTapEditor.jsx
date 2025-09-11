@@ -19,7 +19,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import React from "react";
 import classNames from "classnames";
 
-export const TipTapEditor = () => {
+export const TipTapEditor = ({ onChange }) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -36,6 +36,10 @@ export const TipTapEditor = () => {
       }),
     ],
     content: "",
+    onUpdate: ({ editor }) => {
+      // Mỗi lần editor update -> gọi callback
+      onChange?.(editor.getHTML(), editor.getText(), editor.getJSON());
+    },
   });
 
   const [typography, setTypography] = React.useState("0");

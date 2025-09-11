@@ -25,6 +25,10 @@ import React from "react";
 import { TipTapEditor } from "./components/tipTapEditor";
 import { Dropzone } from "./components/dropzone";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategoryTree } from "@/store/category/Action";
+import { createProduct } from "@/store/product/Action";
+import { useNavigate } from "react-router-dom";
 
 const CustomTextField = styled(TextField)({
   "& label.Mui-focused": {
@@ -57,19 +61,48 @@ const MenuProps = {
 };
 
 export const AddProductPage = () => {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("" > "");
   const [getCategories, setGetCategories] = React.useState([]);
+  const categories = useSelector((store) => store.categories.categories);
+  const products = useSelector((store) => store.products);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [product, setProduct] = React.useState({});
+  const [description, setDescription] = React.useState("");
+  const [imageUrls, setImageUrls] = React.useState([]);
+  const [sellPrice, setSellPrice] = React.useState(0);
+  const formatMoney = new Intl.NumberFormat("vi-VN");
+
+  React.useEffect(() => {
+    const price = Number(product?.supplier_retail_price) || 0;
+    const discount = Number(product?.discount_amount) || 0;
+
+    const finalPrice = price - (price * discount) / 100;
+
+    setProduct((prev) => ({
+      ...prev,
+      sell_price: finalPrice,
+    }));
+  }, [product?.supplier_retail_price, product?.discount_amount]);
+
+  React.useEffect(() => {
+    dispatch(getCategoryTree());
+  }, []);
+  console.log("categories list in create products", categories);
+  // console.log("getCategories", getCategories);
+  // console.log("imageUrls", imageUrls);
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
+    console.log("value", value);
     setGetCategories(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+    setProduct({ ...product, categories: value });
   };
+
   return (
     <Stack spacing={5}>
       {/* Detail */}
@@ -90,13 +123,35 @@ export const AddProductPage = () => {
             }}
           >
             <Stack spacing={3}>
-              <CustomTextField variant="outlined" label="Product Name" />
-              <CustomTextField
+              <TextField
+                variant="outlined"
+                label="Product Name"
+                value={product?.name}
+                name={product?.name}
+                onChange={(e) =>
+                  setProduct({ ...product, name: e.target.value })
+                }
+                sx={{
+                  "& label.Mui-focused": { color: "black" },
+                  "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                    borderColor: "black",
+                  },
+                }}
+              />
+              <TextField
                 variant="outlined"
                 label="Short Description"
-                InputProps={{
-                  style: {
-                    height: "160px",
+                value={product?.short_description}
+                name={product?.short_description}
+                multiline
+                minRows={6}
+                onChange={(e) =>
+                  setProduct({ ...product, short_description: e.target.value })
+                }
+                sx={{
+                  "& label.Mui-focused": { color: "black" },
+                  "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                    borderColor: "black",
                   },
                 }}
               />
@@ -104,14 +159,23 @@ export const AddProductPage = () => {
                 <Typography variant="subtitle1" pb="10px">
                   Description
                 </Typography>
-                <TipTapEditor />
+                <TipTapEditor
+                  onChange={(html, text) =>
+                    setProduct({ ...product, description: html })
+                  }
+                />
               </Box>
 
               <Box>
                 <Typography variant="subtitle1" pb="10px">
                   Images
                 </Typography>
-                <Dropzone />
+                <Dropzone
+                  onFilesChange={(urls) => {
+                    setImageUrls(urls);
+                    setProduct({ ...product, image_url: urls[0] });
+                  }}
+                />
               </Box>
             </Stack>
           </Box>
@@ -137,18 +201,27 @@ export const AddProductPage = () => {
           >
             <Stack spacing={3}>
               <Stack direction="row" spacing={2}>
-                <CustomTextField
+                <TextField
                   fullWidth
                   variant="outlined"
                   label="Product SKU"
                   type="number"
-                  value={value}
+                  value={product?.sku}
+                  //  value={product?.name}
+                  name={product?.sku}
+                  sx={{
+                    "& label.Mui-focused": { color: "black" },
+                    "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                      borderColor: "black",
+                    },
+                    "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                      {
+                        WebkitAppearance: "none",
+                        margin: 0,
+                      },
+                  }}
                   onChange={(e) => {
-                    const v = Number(e.target.value);
-                    if (v >= 0 || e.target.value === "") {
-                      // chỉ cho nhập số dương
-                      setValue(e.target.value === "" ? "" : v);
-                    }
+                    setProduct({ ...product, sku: e.target.value });
                   }}
                 />
                 <CustomTextField
@@ -175,29 +248,39 @@ export const AddProductPage = () => {
                     onChange={handleChange}
                     renderValue={(selected) => (
                       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={value} />
-                        ))}
+                        {selected.map((id) => {
+                          // tìm name theo id
+                          let label = "";
+                          categories.forEach((cate) => {
+                            cate.children.forEach((item) => {
+                              item.children.forEach((i) => {
+                                if (i.id === id) {
+                                  label = i.name;
+                                }
+                              });
+                            });
+                          });
+                          return <Chip key={id} label={label} />;
+                        })}
                       </Box>
                     )}
                     MenuProps={MenuProps}
                   >
-                    <ListSubheader>Category 1</ListSubheader>
-                    <MenuItem key="Category" value="Option 1">
-                      Option 1
-                    </MenuItem>
-                    <MenuItem key="Category" value="Option 2">
-                      Option 2
-                    </MenuItem>
-                    <ListSubheader>Category 2</ListSubheader>
-                    <MenuItem key="Category" value="Option 1">
-                      Option 1
-                    </MenuItem>
-                    <MenuItem key="Category" value="Option 2">
-                      Option 2
-                    </MenuItem>
+                    {categories?.flatMap((cate) =>
+                      cate.children?.flatMap((item) => [
+                        <ListSubheader key={item.name}>
+                          {item.name}
+                        </ListSubheader>,
+                        ...item.children.map((i) => (
+                          <MenuItem key={i.name} value={i.id}>
+                            {i.name}
+                          </MenuItem>
+                        )),
+                      ])
+                    )}
                   </Select>
                 </FormControl>
+                {/* </FormControl>
                 <FormControl sx={{ width: "100%" }}>
                   <InputLabel>Attribute</InputLabel>
                   <Select
@@ -209,7 +292,7 @@ export const AddProductPage = () => {
                     }
                     multiple
                     value={getCategories}
-                    onChange={handleChange}
+                    // onChange={handleChange}
                     renderValue={(selected) => (
                       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                         {selected.map((value) => (
@@ -234,34 +317,24 @@ export const AddProductPage = () => {
                       Option 2
                     </MenuItem>
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Stack>
-              <FormControl sx={{ width: "100%" }}>
-                <InputLabel>Brand</InputLabel>
-                <Select
-                  input={
-                    <OutlinedInput id="select-multiple-chip" label="Category" />
-                  }
-                  multiple
-                  value={getCategories}
-                  onChange={handleChange}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={MenuProps}
-                >
-                  <MenuItem key="Attribute" value="Option 1">
-                    Option 1
-                  </MenuItem>
-                  <MenuItem key="Attribute" value="Option 2">
-                    Option 2
-                  </MenuItem>
-                </Select>
-              </FormControl>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Brand"
+                value={product?.brand_name}
+                name={product?.brand_name}
+                onChange={(e) =>
+                  setProduct({ ...product, brand_name: e.target.value })
+                }
+                sx={{
+                  "& label.Mui-focused": { color: "black" },
+                  "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                    borderColor: "black",
+                  },
+                }}
+              />
             </Stack>
           </Box>
         </AccordionDetails>
@@ -285,11 +358,31 @@ export const AddProductPage = () => {
             }}
           >
             <Stack spacing={3}>
-              <CustomTextField
+              <TextField
                 fullWidth
                 variant="outlined"
                 label="Regular price"
-                type="number"
+                type="text"
+                value={formatMoney.format(product?.supplier_retail_price || 0)}
+                name={product?.supplier_retail_price}
+                onChange={(e) => {
+                  const rawValue = e.target.value.replace(/\D/g, "");
+                  setProduct({
+                    ...product,
+                    supplier_retail_price: rawValue,
+                  });
+                }}
+                sx={{
+                  "& label.Mui-focused": { color: "black" },
+                  "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                    borderColor: "black",
+                  },
+                  "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                    {
+                      WebkitAppearance: "none",
+                      margin: 0,
+                    },
+                }}
                 placeholder="0"
                 InputLabelProps={{ shrink: true }}
                 slotProps={{
@@ -300,11 +393,30 @@ export const AddProductPage = () => {
                   },
                 }}
               />
-              <CustomTextField
+              <TextField
                 fullWidth
                 variant="outlined"
                 label="Discount"
                 type="number"
+                value={product?.discount_amount}
+                name={product?.discount_amount}
+                onChange={(e) =>
+                  setProduct({
+                    ...product,
+                    discount_amount: e.target.value,
+                  })
+                }
+                sx={{
+                  "& label.Mui-focused": { color: "black" },
+                  "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                    borderColor: "black",
+                  },
+                  "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                    {
+                      WebkitAppearance: "none",
+                      margin: 0,
+                    },
+                }}
                 placeholder="0"
                 InputLabelProps={{ shrink: true }}
                 slotProps={{
@@ -315,15 +427,36 @@ export const AddProductPage = () => {
                   },
                 }}
               />
-              <CustomTextField
+              <TextField
                 fullWidth
                 variant="outlined"
                 label="Sale price"
-                type="number"
+                type="text"
+                value={formatMoney.format(product?.sell_price || 0)}
+                name={product?.sell_price}
+                onChange={(e) => {
+                  const rawValue = e.target.value.replace(/\D/g, "");
+                  setProduct({
+                    ...product,
+                    sell_price: rawValue,
+                  });
+                }}
+                sx={{
+                  "& label.Mui-focused": { color: "black" },
+                  "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                    borderColor: "black",
+                  },
+                  "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                    {
+                      WebkitAppearance: "none",
+                      margin: 0,
+                    },
+                }}
                 placeholder="0"
                 InputLabelProps={{ shrink: true }}
                 slotProps={{
                   input: {
+                    readOnly: true,
                     startAdornment: (
                       <InputAdornment position="start">VND</InputAdornment>
                     ),
@@ -349,6 +482,11 @@ export const AddProductPage = () => {
               backgroundColor: "text.primary",
               color: "background.paper",
             },
+          }}
+          onClick={() => {
+            console.log("product", product);
+            dispatch(createProduct(product));
+            products.loading == false && navigate("/admin/products");
           }}
         >
           Create Product

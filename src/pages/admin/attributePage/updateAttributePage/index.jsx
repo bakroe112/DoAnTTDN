@@ -18,18 +18,29 @@ import {
 } from "@mui/material";
 import React from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { addNewCategory, getAllCategories } from "@/store/category/Action";
+import { getAttribute, updateAttribute } from "@/store/attribute/Action";
 
-export const AddCategoryPage = () => {
-  const categories = useSelector((store) => store.categories);
+export const UpdateAttributePage = () => {
+  const { id } = useParams();
+  const attributes = useSelector((store) => store.attributes);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [category, setCategory] = React.useState({});
+  const [attribute, setAttribute] = React.useState({});
   React.useEffect(() => {
-    dispatch(getAllCategories());
+    dispatch(getAttribute(id));
   }, []);
+  React.useEffect(() => {
+    setAttribute(attributes.attribute);
+  }, [attributes.attribute]);
+
+  const parent = attributes.attributes.find(
+    (item) => item.id == attributes.attribute?.parent_id
+  );
+  const remainList = attributes.attributes.filter((item) => item.id != id);
+  console.log("attributes", attributes);
+  // console.log("parent", parent);
 
   const CustomTextField = styled(TextField)({
     "& label.Mui-focused": {
@@ -44,11 +55,16 @@ export const AddCategoryPage = () => {
     //   color: "gray",
     // },
   });
-  const [getCategories, setGetCategories] = React.useState("");
+
+  const [getAttributes, setGetAttributes] = React.useState("");
+
+  React.useEffect(() => {
+    setGetAttributes(parent?.id);
+  }, [parent]);
 
   const handleChange = (event) => {
-    setGetCategories(event.target.value);
-    setCategory({ ...category, parent_id: event.target.value });
+    setGetAttributes(event.target.value);
+    setAttribute({ ...attribute, parent_id: event.target.value });
   };
   return (
     <>
@@ -56,9 +72,9 @@ export const AddCategoryPage = () => {
         <Accordion defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Stack>
-              <Typography variant="h6">Properties</Typography>
+              <Typography variant="h6">New Attribute</Typography>
               <Typography variant="subtitle1" color="text.disabled">
-                Additional attributes...
+                Additional new attribute...
               </Typography>
             </Stack>
           </AccordionSummary>
@@ -74,11 +90,28 @@ export const AddCategoryPage = () => {
                 <TextField
                   fullWidth
                   variant="outlined"
-                  label="Category name"
-                  value={category?.name}
-                  name={category?.name}
+                  label="Attribute name"
+                  value={attribute?.name}
+                  name={attribute?.name}
                   onChange={(e) =>
-                    setCategory({ ...category, name: e.target.value })
+                    setAttribute({ ...attribute, name: e.target.value })
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  sx={{
+                    "& label.Mui-focused": { color: "black" },
+                    "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                      borderColor: "black",
+                    },
+                  }}
+                />
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Attribute value"
+                  value={attribute?.value}
+                  name={attribute?.value}
+                  onChange={(e) =>
+                    setAttribute({ ...attribute, value: e.target.value })
                   }
                   sx={{
                     "& label.Mui-focused": { color: "black" },
@@ -89,29 +122,24 @@ export const AddCategoryPage = () => {
                 />
 
                 <FormControl fullWidth>
-                  <InputLabel shrink>Category parent</InputLabel>
+                  <InputLabel>Attribute parent</InputLabel>
                   <Select
                     input={
                       <OutlinedInput
                         id="select-multiple-chip"
-                        label="Category parent"
+                        label="Attribute parent"
                       />
                     }
-                    displayEmpty
-                    value={getCategories}
+                    value={getAttributes}
                     onChange={handleChange}
                     renderValue={(selected) => {
-                      if (selected == null || selected == "") return "None";
-                      const found = categories.categories.find(
-                        (c) => c.id === selected
+                      const attribute = remainList.find(
+                        (item) => item.id === selected
                       );
-                      return found ? found.name : "None";
+                      return attribute?.name;
                     }}
                   >
-                    <MenuItem value={null}>
-                      <em>None</em>
-                    </MenuItem>
-                    {categories.categories.map((item) => (
+                    {remainList.map((item) => (
                       <MenuItem key={item.id} value={item.id}>
                         {item.name}
                       </MenuItem>
@@ -138,11 +166,11 @@ export const AddCategoryPage = () => {
               },
             }}
             onClick={() => {
-              dispatch(addNewCategory(category));
-              categories.loading === false && navigate("/admin/categories");
+              dispatch(updateAttribute(id, attribute));
+              attributes.loading === false && navigate("/admin/attributes");
             }}
           >
-            Create Product
+            Update Attribute
           </Button>
         </Stack>
       </Stack>

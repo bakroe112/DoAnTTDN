@@ -22,7 +22,7 @@ class ProductImageResource extends JsonResource
         $this->withoutWrapping();
         return [
             'productId' => $this->product_id,
-            'ImagesId' => $this->images_id,
+            'url' => $this->url,
         ];
     }
 }
