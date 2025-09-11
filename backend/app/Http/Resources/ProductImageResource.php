@@ -23,6 +23,8 @@ class ProductImageResource extends JsonResource
         return [
             'productId' => $this->product_id,
             'url' => $this->url,
+            'createdAt' => $this->created_at,
+            'updatedAt' => $this->updated_at,
         ];
     }
 }

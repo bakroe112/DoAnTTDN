@@ -11,6 +11,10 @@ class Attribute extends Model
         'value',
         'parent_id'
     ];
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
     public function productAttributes()
     {
         return $this->hasMany(ProductAttribute::class, 'attributes_id');

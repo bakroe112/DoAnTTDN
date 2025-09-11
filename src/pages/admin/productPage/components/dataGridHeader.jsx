@@ -18,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 
 function RenderProduct(props) {
   const { value, row } = props;
+  console.log("image_url", row.imageUrl);
+  console.log("name", row.name);
 
   return (
     <Box
@@ -29,7 +31,7 @@ function RenderProduct(props) {
         paddingRight: "12px",
       }}
     >
-      <img src="" className="w-[70px] h-[70px] rounded-[12px]" />
+      <img src={row.imageUrl} className="w-[70px] h-[70px] rounded-[12px]" />
       <Typography
         variant="subtitle2"
         sx={{

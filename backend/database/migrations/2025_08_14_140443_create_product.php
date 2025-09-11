@@ -16,7 +16,6 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            // $table->id();
             // IDs & keys
             $table->unsignedBigInteger('sku')->primary();
 
@@ -31,16 +30,12 @@ return new class extends Migration {
             $table->unsignedBigInteger('discount_amount')->nullable();
             $table->unsignedBigInteger('sell_price')->nullable();
 
-            // % giảm giá (giữ 2 chữ số thập phân)
-            // $table->decimal('discount_percent', 5, 2)->default(0);
-
             // Nội dung dài / HTML
             $table->longText('description')->nullable();
             $table->longText('short_description')->nullable();
 
             // brand name
             $table->string('brand_name', 255);
-            $table->string('brand_logo', 2048)->nullable();
 
             $table->timestamps();
         });

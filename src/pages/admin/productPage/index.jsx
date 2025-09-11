@@ -25,8 +25,7 @@ export const AdminProductPage = () => {
   }, []);
 
   console.log("products", products);
-
-  const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
+  
   const [paginationModel, setPaginationModel] = React.useState({
     pageSize: 5,
     page: 0,

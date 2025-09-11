@@ -24,7 +24,9 @@ class AttributeResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'value' => $this->value,
-            'parent_id' => $this->parent_id
+            'parent_id' => $this->parent_id,
+            'createdAt' => $this->created_at,
+            'updatedAt' => $this->updated_at,
         ];
     }
 }

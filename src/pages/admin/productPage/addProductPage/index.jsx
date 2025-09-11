@@ -29,25 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCategoryTree } from "@/store/category/Action";
 import { createProduct } from "@/store/product/Action";
 import { useNavigate } from "react-router-dom";
-
-const CustomTextField = styled(TextField)({
-  "& label.Mui-focused": {
-    color: "black",
-  },
-  "& .MuiOutlinedInput-root": {
-    "&.Mui-focused fieldset": {
-      borderColor: "black",
-    },
-  },
-  // Ẩn nút tăng giảm của Chrome, Safari, Edge
-  "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
-    WebkitAppearance: "none",
-    margin: 0,
-  },
-  // "& .MuiInputLabel-root": {
-  //   color: "gray",
-  // },
-});
+import { getAttributeTree } from "@/store/attribute/Action";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -62,14 +44,15 @@ const MenuProps = {
 
 export const AddProductPage = () => {
   const [getCategories, setGetCategories] = React.useState([]);
+  const [getAttributes, setGetAttributes] = React.useState([]);
+  const [imageUrl, setImageUrl] = React.useState(null);
   const categories = useSelector((store) => store.categories.categories);
+  const attributes = useSelector((store) => store.attributes.attributes);
   const products = useSelector((store) => store.products);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [product, setProduct] = React.useState({});
-  const [description, setDescription] = React.useState("");
   const [imageUrls, setImageUrls] = React.useState([]);
-  const [sellPrice, setSellPrice] = React.useState(0);
   const formatMoney = new Intl.NumberFormat("vi-VN");
 
   React.useEffect(() => {
@@ -86,12 +69,10 @@ export const AddProductPage = () => {
 
   React.useEffect(() => {
     dispatch(getCategoryTree());
+    dispatch(getAttributeTree());
   }, []);
-  console.log("categories list in create products", categories);
-  // console.log("getCategories", getCategories);
-  // console.log("imageUrls", imageUrls);
 
-  const handleChange = (event) => {
+  const handleChangeCategories = (event) => {
     const {
       target: { value },
     } = event;
@@ -101,6 +82,26 @@ export const AddProductPage = () => {
       typeof value === "string" ? value.split(",") : value
     );
     setProduct({ ...product, categories: value });
+  };
+  const handleChangeAttributes = (event) => {
+    const {
+      target: { value },
+    } = event;
+    console.log("value", value);
+    setGetAttributes(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+    setProduct({ ...product, attributes: value });
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setImageUrl(url);
+      setProduct({ ...product, image_url: imageUrl });
+    }
   };
 
   return (
@@ -123,6 +124,39 @@ export const AddProductPage = () => {
             }}
           >
             <Stack spacing={3}>
+              <Box>
+                {imageUrl && (
+                  <Box mb={2}>
+                    <img
+                      src={imageUrl}
+                      style={{ width: "60%", borderRadius: "8px" }}
+                    />
+                  </Box>
+                )}
+                <Button
+                  variant="outlined"
+                  component="label"
+                  size="large"
+                  color="primary.text"
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: 600,
+                    transition: "0.3s ease-in-out",
+                    ":hover": {
+                      backgroundColor: "text.primary",
+                      color: "background.paper",
+                    },
+                  }}
+                >
+                  Choose Image
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={handleFileChange}
+                  />
+                </Button>
+              </Box>
               <TextField
                 variant="outlined"
                 label="Product Name"
@@ -160,7 +194,7 @@ export const AddProductPage = () => {
                   Description
                 </Typography>
                 <TipTapEditor
-                  onChange={(html, text) =>
+                  onChange={(html) =>
                     setProduct({ ...product, description: html })
                   }
                 />
@@ -173,7 +207,7 @@ export const AddProductPage = () => {
                 <Dropzone
                   onFilesChange={(urls) => {
                     setImageUrls(urls);
-                    setProduct({ ...product, image_url: urls[0] });
+                    setProduct({ ...product, images: urls });
                   }}
                 />
               </Box>
@@ -224,13 +258,29 @@ export const AddProductPage = () => {
                     setProduct({ ...product, sku: e.target.value });
                   }}
                 />
-                <CustomTextField
+                <TextField
                   fullWidth
                   variant="outlined"
                   label="Quantity"
                   type="number"
+                  value={product?.quantity}
+                  //  value={product?.name}
+                  name={product?.quantity}
                   placeholder="0"
-                  InputLabelProps={{ shrink: true }}
+                  sx={{
+                    "& label.Mui-focused": { color: "black" },
+                    "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                      borderColor: "black",
+                    },
+                    "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                      {
+                        WebkitAppearance: "none",
+                        margin: 0,
+                      },
+                  }}
+                  onChange={(e) => {
+                    setProduct({ ...product, quantity: e.target.value });
+                  }}
                 />
               </Stack>
               <Stack direction="row" spacing={2}>
@@ -245,7 +295,7 @@ export const AddProductPage = () => {
                     }
                     multiple
                     value={getCategories}
-                    onChange={handleChange}
+                    onChange={handleChangeCategories}
                     renderValue={(selected) => (
                       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                         {selected.map((id) => {
@@ -280,44 +330,48 @@ export const AddProductPage = () => {
                     )}
                   </Select>
                 </FormControl>
-                {/* </FormControl>
                 <FormControl sx={{ width: "100%" }}>
                   <InputLabel>Attribute</InputLabel>
                   <Select
                     input={
                       <OutlinedInput
                         id="select-multiple-chip"
-                        label="Category"
+                        label="Attribute"
                       />
                     }
                     multiple
-                    value={getCategories}
-                    // onChange={handleChange}
+                    value={getAttributes}
+                    onChange={handleChangeAttributes}
                     renderValue={(selected) => (
                       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={value} />
-                        ))}
+                        {selected.map((id) => {
+                          // tìm name theo id
+                          let label = "";
+                          attributes.forEach((attr) => {
+                            attr.children.forEach((item) => {
+                              if (item.id === id) {
+                                label = item.value;
+                              }
+                            });
+                          });
+                          return <Chip key={id} label={label} />;
+                        })}
                       </Box>
                     )}
                     MenuProps={MenuProps}
                   >
-                    <ListSubheader>Attribute 1</ListSubheader>
-                    <MenuItem key="Attribute" value="Option 1">
-                      Option 1
-                    </MenuItem>
-                    <MenuItem key="Attribute" value="Option 2">
-                      Option 2
-                    </MenuItem>
-                    <ListSubheader>Attribute 2</ListSubheader>
-                    <MenuItem key="Attribute" value="Option 1">
-                      Option 1
-                    </MenuItem>
-                    <MenuItem key="Attribute" value="Option 2">
-                      Option 2
-                    </MenuItem>
+                    {attributes?.flatMap((attr) =>
+                      attr.children?.flatMap((item) => [
+                        <ListSubheader key={item.name}>
+                          {item.name}
+                        </ListSubheader>,
+                        <MenuItem key={item.value} value={item.id}>
+                          {item.value}
+                        </MenuItem>,
+                      ])
+                    )}
                   </Select>
-                </FormControl> */}
+                </FormControl>
               </Stack>
               <TextField
                 fullWidth

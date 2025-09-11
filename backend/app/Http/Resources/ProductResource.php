@@ -34,7 +34,7 @@ class ProductResource extends JsonResource
             'brandName' => $this->brand_name,
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),
             'attributes' => AttributeResource::collection($this->whenLoaded('attributes')),
-            'images' => ImageResource::collection($this->whenLoaded('images')),
+            'images' => $this->whenLoaded('images'),
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];

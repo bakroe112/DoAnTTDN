@@ -33,6 +33,22 @@ export const getAllAttributes = () => async (dispatch) => {
   }
 };
 
+export const getAttributeTree = () => async (dispatch) => {
+  dispatch({ type: GET_ALL_ATTRIBUTES_REQUEST });
+  try {
+    axiosClient
+      .get("/attributes")
+      .then((data) => {
+        dispatch({ type: GET_ALL_ATTRIBUTES_SUCCESS, payload: data.data });
+      })
+      .catch((e) => {
+        dispatch({ type: GET_ALL_ATTRIBUTES_FAILURE, payload: e });
+      });
+  } catch (error) {
+    dispatch({ type: GET_ALL_ATTRIBUTES_FAILURE, payload: e });
+  }
+};
+
 export const getAttribute = (id) => async (dispatch) => {
   dispatch({ type: GET_ATTRIBUTE_REQUEST });
   try {

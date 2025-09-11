@@ -23,6 +23,8 @@ class ProductCategoryResource extends JsonResource
         return [
             'productId' => $this->product_id,
             'CategoryId' => $this->category_id,
+            'createdAt' => $this->created_at,
+            'updatedAt' => $this->updated_at,
         ];
     }
 }

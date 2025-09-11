@@ -32,6 +32,7 @@ export const getAllCategories = () => async (dispatch) => {
     dispatch({ type: GET_ALL_CATEGORIES_FAILURE, payload: e });
   }
 };
+
 export const getCategoryTree = () => async (dispatch) => {
   dispatch({ type: GET_ALL_CATEGORIES_REQUEST });
   try {
