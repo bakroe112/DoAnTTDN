@@ -71,7 +71,6 @@ class DatabaseSeeder extends Seeder
             'description' => 'something',
             'short_description' => 'something',
             'brand_name' => 'asus pro',
-            'brand_logo' => 'ASSSSUS',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -87,7 +86,6 @@ class DatabaseSeeder extends Seeder
             'description' => 'something',
             'short_description' => 'something',
             'brand_name' => 'Mac pro',
-            'brand_logo' => 'MACCCC',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

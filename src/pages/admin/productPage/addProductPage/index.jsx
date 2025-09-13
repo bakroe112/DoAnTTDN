@@ -30,6 +30,7 @@ import { getCategoryTree } from "@/store/category/Action";
 import { createProduct } from "@/store/product/Action";
 import { useNavigate } from "react-router-dom";
 import { getAttributeTree } from "@/store/attribute/Action";
+import { uploadToCloudinary } from "@/components/uploadToCloudinary";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -46,6 +47,7 @@ export const AddProductPage = () => {
   const [getCategories, setGetCategories] = React.useState([]);
   const [getAttributes, setGetAttributes] = React.useState([]);
   const [imageUrl, setImageUrl] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
   const categories = useSelector((store) => store.categories.categories);
   const attributes = useSelector((store) => store.attributes.attributes);
   const products = useSelector((store) => store.products);
@@ -95,13 +97,17 @@ export const AddProductPage = () => {
     setProduct({ ...product, attributes: value });
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setImageUrl(url);
-      setProduct({ ...product, image_url: imageUrl });
-    }
+
+    const url = URL.createObjectURL(file);
+    setImageUrl(url);
+    setLoading(true);
+    const imgUrl = await uploadToCloudinary(file);
+    console.log("imgUrl", imgUrl);
+    console.log("file", file);
+    setProduct({ ...product, image_url: imgUrl });
+    setLoading(false);
   };
 
   return (
@@ -127,10 +133,14 @@ export const AddProductPage = () => {
               <Box>
                 {imageUrl && (
                   <Box mb={2}>
-                    <img
-                      src={imageUrl}
-                      style={{ width: "60%", borderRadius: "8px" }}
-                    />
+                    {loading ? (
+                      "Uploading..."
+                    ) : (
+                      <img
+                        src={imageUrl}
+                        style={{ width: "60%", borderRadius: "8px" }}
+                      />
+                    )}
                   </Box>
                 )}
                 <Button

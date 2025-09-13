@@ -12,9 +12,12 @@ import React from "react";
 import { useDropzone } from "react-dropzone";
 import ClearIcon from "@mui/icons-material/Clear";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { uploadToCloudinary } from "@/components/uploadToCloudinary";
 
 export const Dropzone = ({ onFilesChange }) => {
   const [files, setFiles] = React.useState([]);
+  const [uploadedUrls, setUploadedUrls] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
 
   const onDrop = React.useCallback(
     (acceptedFiles) => {
@@ -41,6 +44,25 @@ export const Dropzone = ({ onFilesChange }) => {
 
   const handleDeleteAllImage = () => {
     setFiles([]);
+  };
+
+  const handleUpload = async () => {
+    if (files.length === 0) return;
+
+    setLoading(true);
+    try {
+      const urls = [];
+      for (const file of files) {
+        const url = await uploadToCloudinary(file);
+        urls.push(url);
+      }
+      setUploadedUrls(urls);
+      onFilesChange?.(urls); // gọi callback ra ngoài
+    } catch (err) {
+      console.error("Upload error:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // console.log("files", files);
