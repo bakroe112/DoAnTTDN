@@ -17,7 +17,6 @@ import StarterKit from "@tiptap/starter-kit";
 import Heading from "@tiptap/extension-heading";
 import Placeholder from "@tiptap/extension-placeholder";
 import React from "react";
-import classNames from "classnames";
 
 export const TipTapEditor = ({ onChange }) => {
   const editor = useEditor({

@@ -18,8 +18,8 @@ import { useNavigate } from "react-router-dom";
 
 function RenderProduct(props) {
   const { value, row } = props;
-  console.log("image_url", row.imageUrl);
-  console.log("name", row.name);
+  // console.log("image_url", row.imageUrl);
+  // console.log("name", row.name);
 
   return (
     <Box
@@ -162,7 +162,7 @@ const DataGridHeader = () => {
       renderCell: RenderDateTime,
     },
     {
-      field: "latestPrice",
+      field: "sellPrice",
       headerName: "Price",
       width: 120,
       valueGetter: (value) => value,

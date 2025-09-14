@@ -30,21 +30,7 @@ export const AddAttributePage = () => {
     dispatch(getAllAttributes());
   }, []);
 
-  const CustomTextField = styled(TextField)({
-    "& label.Mui-focused": {
-      color: "black",
-    },
-    "& .MuiOutlinedInput-root": {
-      "&.Mui-focused fieldset": {
-        borderColor: "black",
-      },
-    },
-    // "& .MuiInputLabel-root": {
-    //   color: "gray",
-    // },
-  });
   const [getAttributes, setGetAttributes] = React.useState("");
-
   const handleChange = (event) => {
     setGetAttributes(event.target.value);
     setAttributes({ ...attribute, parent_id: event.target.value });
@@ -104,7 +90,7 @@ export const AddAttributePage = () => {
                 />
 
                 <FormControl fullWidth>
-                  <InputLabel>Attribute parent</InputLabel>
+                  <InputLabel shrink>Attribute parent</InputLabel>
                   <Select
                     input={
                       <OutlinedInput
@@ -112,14 +98,35 @@ export const AddAttributePage = () => {
                         label="Attribute parent"
                       />
                     }
+                    displayEmpty
                     value={getAttributes}
                     onChange={handleChange}
+                    renderValue={(selected) => {
+                      if (selected == null || selected == "") return "None";
+                      const found = attributes.attributes.find(
+                        (c) => c.id === selected
+                      );
+                      return found ? found.name : "None";
+                    }}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 300,
+                          overflowY: "auto",
+                        },
+                      },
+                    }}
                   >
-                    {attributes.attributes.map((item) => (
-                      <MenuItem key={item.id} value={item.id}>
-                        {item.name}
-                      </MenuItem>
-                    ))}
+                    <MenuItem value={null}>
+                      <em>None</em>
+                    </MenuItem>
+                    {attributes.attributes
+                      .filter((item) => item.parent_id === null)
+                      .map((item) => (
+                        <MenuItem key={item.id} value={item.id}>
+                          {item.name}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
               </Stack>

@@ -16,8 +16,8 @@ import { uploadToCloudinary } from "@/components/uploadToCloudinary";
 
 export const Dropzone = ({ onFilesChange }) => {
   const [files, setFiles] = React.useState([]);
-  const [uploadedUrls, setUploadedUrls] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  const [uploadSuccess, setUploadSuccess] = React.useState(false);
 
   const onDrop = React.useCallback(
     (acceptedFiles) => {
@@ -56,12 +56,13 @@ export const Dropzone = ({ onFilesChange }) => {
         const url = await uploadToCloudinary(file);
         urls.push(url);
       }
-      setUploadedUrls(urls);
       onFilesChange?.(urls); // gọi callback ra ngoài
+      // setFiles(urls)
     } catch (err) {
       console.error("Upload error:", err);
     } finally {
       setLoading(false);
+      setUploadSuccess(true);
     }
   };
 
@@ -147,6 +148,13 @@ export const Dropzone = ({ onFilesChange }) => {
           <Stack direction="row" spacing={1} py="18px">
             {renderFiles}
           </Stack>
+          {uploadSuccess ? (
+            <Typography variant="subtitle1" color="success">
+              Upload Successful!
+            </Typography>
+          ) : (
+            ""
+          )}
           <Stack
             direction="row"
             spacing={1}
@@ -185,8 +193,9 @@ export const Dropzone = ({ onFilesChange }) => {
                 },
                 transition: "0.3s ease-in-out",
               }}
+              onClick={handleUpload}
             >
-              Upload
+              {loading ? "Uploading..." : "Upload"}
             </Button>
           </Stack>
         </Stack>

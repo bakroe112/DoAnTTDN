@@ -1,4 +1,3 @@
-import { Icon } from "@iconify-icon/react";
 import {
   Accordion,
   AccordionDetails,
@@ -17,7 +16,6 @@ import {
   OutlinedInput,
   Select,
   Stack,
-  styled,
   TextField,
   Typography,
 } from "@mui/material";
@@ -39,6 +37,7 @@ const MenuProps = {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
       width: 250,
+      overflowY: "auto",
     },
   },
 };
@@ -46,6 +45,7 @@ const MenuProps = {
 export const AddProductPage = () => {
   const [getCategories, setGetCategories] = React.useState([]);
   const [getAttributes, setGetAttributes] = React.useState([]);
+  const [getSellPrice, setGetSellPrice] = React.useState(0);
   const [imageUrl, setImageUrl] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const categories = useSelector((store) => store.categories.categories);
@@ -54,7 +54,6 @@ export const AddProductPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [product, setProduct] = React.useState({});
-  const [imageUrls, setImageUrls] = React.useState([]);
   const formatMoney = new Intl.NumberFormat("vi-VN");
 
   React.useEffect(() => {
@@ -62,7 +61,7 @@ export const AddProductPage = () => {
     const discount = Number(product?.discount_amount) || 0;
 
     const finalPrice = price - (price * discount) / 100;
-
+    // setGetSellPrice(finalPrice);
     setProduct((prev) => ({
       ...prev,
       sell_price: finalPrice,
@@ -78,7 +77,6 @@ export const AddProductPage = () => {
     const {
       target: { value },
     } = event;
-    console.log("value", value);
     setGetCategories(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
@@ -89,7 +87,6 @@ export const AddProductPage = () => {
     const {
       target: { value },
     } = event;
-    console.log("value", value);
     setGetAttributes(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
@@ -100,13 +97,10 @@ export const AddProductPage = () => {
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
 
-    const url = URL.createObjectURL(file);
-    setImageUrl(url);
     setLoading(true);
     const imgUrl = await uploadToCloudinary(file);
-    console.log("imgUrl", imgUrl);
-    console.log("file", file);
-    setProduct({ ...product, image_url: imgUrl });
+    setImageUrl(imgUrl);
+    setProduct((prev) => ({ ...prev, image_url: imgUrl }));
     setLoading(false);
   };
 
@@ -134,7 +128,7 @@ export const AddProductPage = () => {
                 {imageUrl && (
                   <Box mb={2}>
                     {loading ? (
-                      "Uploading..."
+                      ""
                     ) : (
                       <img
                         src={imageUrl}
@@ -158,7 +152,8 @@ export const AddProductPage = () => {
                     },
                   }}
                 >
-                  Choose Image
+                  {loading ? "Uploading..." : "Choose Image"}
+
                   <input
                     type="file"
                     hidden
@@ -216,8 +211,7 @@ export const AddProductPage = () => {
                 </Typography>
                 <Dropzone
                   onFilesChange={(urls) => {
-                    setImageUrls(urls);
-                    setProduct({ ...product, images: urls });
+                    setProduct((prev) => ({ ...prev, images: urls }));
                   }}
                 />
               </Box>
@@ -251,7 +245,6 @@ export const AddProductPage = () => {
                   label="Product SKU"
                   type="number"
                   value={product?.sku}
-                  //  value={product?.name}
                   name={product?.sku}
                   sx={{
                     "& label.Mui-focused": { color: "black" },
@@ -461,7 +454,7 @@ export const AddProductPage = () => {
                 fullWidth
                 variant="outlined"
                 label="Discount"
-                type="number"
+                type="text"
                 value={product?.discount_amount}
                 name={product?.discount_amount}
                 onChange={(e) =>
@@ -550,7 +543,8 @@ export const AddProductPage = () => {
           onClick={() => {
             console.log("product", product);
             dispatch(createProduct(product));
-            products.loading == false && navigate("/admin/products");
+            // setProduct({});
+            products.loading === false && navigate("/admin/products");
           }}
         >
           Create Product

@@ -30,7 +30,7 @@ export const AddCategoryPage = () => {
   React.useEffect(() => {
     dispatch(getAllCategories());
   }, []);
-
+  console.log("categories", categories);
   const CustomTextField = styled(TextField)({
     "& label.Mui-focused": {
       color: "black",
@@ -106,6 +106,14 @@ export const AddCategoryPage = () => {
                         (c) => c.id === selected
                       );
                       return found ? found.name : "None";
+                    }}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 300,
+                          overflowY: "auto",
+                        },
+                      },
                     }}
                   >
                     <MenuItem value={null}>

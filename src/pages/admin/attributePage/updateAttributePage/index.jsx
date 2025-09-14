@@ -138,6 +138,14 @@ export const UpdateAttributePage = () => {
                       );
                       return attribute?.name;
                     }}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 300,
+                          overflowY: "auto",
+                        },
+                      },
+                    }}
                   >
                     {remainList.map((item) => (
                       <MenuItem key={item.id} value={item.id}>
