@@ -17,15 +17,12 @@ export const SortSection = () => {
     if (getValue == "asc") {
       searchParams.set("sort", "sell_price");
       navigate(`?${searchParams.toString()}`);
-      console.log("getValue", getValue);
     } else if (getValue == "des") {
       searchParams.set("sort", "sell_price");
       navigate(`?${searchParams.toString()}`);
-      console.log("getValue", getValue);
     } else if (getValue == "discount_amount") {
       searchParams.set("sort", "discount_amount");
       navigate(`?${searchParams.toString()}`);
-      console.log("getValue", getValue);
     }
   });
   return (

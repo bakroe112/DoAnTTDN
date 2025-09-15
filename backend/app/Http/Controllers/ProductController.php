@@ -30,8 +30,9 @@ class ProductController extends Controller
             });
 
         if ($category) {
-            $products->whereHas('categories', function ($q) use ($category) {
-                $q->where('categories.id', $category);
+            $categories = explode(',', $category);
+            $products->whereHas('categories', function ($q) use ($categories) {
+                $q->whereIn('categories.name', $categories);
             });
         }
 
@@ -55,12 +56,15 @@ class ProductController extends Controller
         }
 
         if ($attributeName || $attributeValue) {
-            $products->whereHas('attributes', function ($q) use ($attributeName, $attributeValue) {
-                if ($attributeName) {
-                    $q->where('name', 'like', "%{$attributeName}%");
+            $attributesName = explode(',', $attributeName);
+            $attributesValue = explode(',', $attributeValue);
+
+            $products->whereHas('attributes', function ($q) use ($attributesName, $attributesValue) {
+                if ($attributesName) {
+                    $q->whereIn('name', 'like', "%{$attributesName}%");
                 }
-                if ($attributeValue) {
-                    $q->where('value', 'like', "%{$attributeValue}%");
+                if ($attributesValue) {
+                    $q->whereIn('value', 'like', "%{$attributesValue}%");
                 }
             });
         }

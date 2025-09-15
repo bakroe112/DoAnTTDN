@@ -5,12 +5,14 @@ import { ClientFooter } from "./footer";
 import { CircularProgress, Divider, Stack } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { getShopProduct } from "@/store/product/Action";
+import { getCategoryTree } from "@/store/category/Action";
 
 export const ClientLayout = () => {
   const dispatch = useDispatch();
   const products = useSelector((store) => store.products);
+  const categories = useSelector((store) => store.categories);
   const path = useLocation();
-  
+
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [path.pathname]);
@@ -19,6 +21,9 @@ export const ClientLayout = () => {
     dispatch(getShopProduct());
   }, [path.search]);
 
+  React.useEffect(() => {
+    dispatch(getCategoryTree());
+  }, [path.search]);
   // console.log("products: ", products);
   return (
     <>

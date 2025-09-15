@@ -16,11 +16,12 @@ import React, { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Checkbox from "@mui/material/Checkbox";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const FilterSection = () => {
   const filter = new Intl.NumberFormat("vi-VN");
-
   const [value, setValue] = useState([0, 50000000]);
+  const [getValueCategories, setGetValueCategories] = React.useState([]);
 
   const valuetext = (value) => {
     return `${filter.format(value)}`;
@@ -32,24 +33,46 @@ export const FilterSection = () => {
       setValue([value[0], Math.max(newValue[1], value[0])]);
     }
   };
-  // CheckBox
-  const [checked, setChecked] = useState(true);
 
-  const handleChangeCheck = (e) => {
-    setChecked(e.target.checked);
+  // CheckBox
+  const { search } = window.location;
+  const searchParams = new URLSearchParams(search);
+  const navigate = useNavigate();
+
+  const handleChangeCheck = (e, name) => {
+    let updatedCate = [...getValueCategories];
+    if (e.target.checked) {
+      updatedCate.push(name);
+    } else {
+      updatedCate = updatedCate.filter((item) => item !== name);
+    }
+    setGetValueCategories(updatedCate);
+    if (updatedCate.length > 0) {
+      // gán thành 1 chuỗi ví dụ như "Apple,Acer,Dell"
+      searchParams.set("categories", updatedCate.join(","));
+    } else {
+      searchParams.delete("categories");
+    }
+    navigate(`?${searchParams.toString()}`);
   };
 
+  React.useEffect(() => {
+    const { search } = window.location;
+    const searchParams = new URLSearchParams(search);
+    const url = searchParams.get("categories");
+    if (url) {
+      // sau đó cập nhật lại thành ["Apple", "Acer", "Dell"] để ko lỗi getValueCategories
+      setGetValueCategories(url.split(","));
+    }
+  }, []);
   // height check
   const [more, setMore] = useState(false);
 
   const product = useSelector((store) => store.products);
   console.log("product", product);
 
-  const categories = product.products.categories;
-  console.log("categories", categories);
-
-  const { search } = window.location;
-  const searchParams = new URLSearchParams(search);
+  const categories = useSelector((store) => store.categories);
+  const ListCategory = categories.categories;
 
   return (
     <Stack p="10px" position="relative">
@@ -103,46 +126,58 @@ export const FilterSection = () => {
       <Divider variant="middle" />
 
       <Stack>
-        <Accordion defaultExpanded>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography fontSize="14px" fontWeight={600}>
-              Thương hiệu
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails
-            sx={{
-              mt: "-16px",
-              maxHeight: more ? "100%" : "85px",
-              overflow: "hidden",
-            }}
-          >
-            <FormGroup
-              row
-              sx={{
-                "& .MuiTypography-root": { fontSize: "14px" },
-              }}
-            >
-              <FormControlLabel
-                control={
-                  <Checkbox checked={checked} onChange={handleChangeCheck} />
-                }
-                label="9Fit"
-              />
-            </FormGroup>
-          </AccordionDetails>
-          {!more && (
-            <Box
-              component={Typography}
-              variant="captiontext"
-              color="primary.light"
-              sx={{ cursor: "pointer" }}
-              onClick={() => setMore(true)}
-              ml="56px"
-            >
-              Xem thêm
-            </Box>
-          )}
-        </Accordion>
+        {ListCategory.map((cate) => (
+          <>
+            {cate.children.slice(0, 1).map((item) => (
+              <Accordion defaultExpanded>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography fontSize="14px" fontWeight={600}>
+                    {item.name}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails
+                  sx={{
+                    mt: "-16px",
+                    // maxHeight: more ? "100%" : "85px",
+
+                    overflow: "hidden",
+                  }}
+                >
+                  <FormGroup
+                    row
+                    sx={{
+                      "& .MuiTypography-root": { fontSize: "14px" },
+                    }}
+                  >
+                    {item.children.map((i) => (
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={getValueCategories.includes(i.name)}
+                            onChange={(e) => handleChangeCheck(e, i.name)}
+                          />
+                        }
+                        label={i.name}
+                      />
+                    ))}
+                  </FormGroup>
+                </AccordionDetails>
+                {/* {!more && (
+                  <Box
+                    component={Typography}
+                    variant="captiontext"
+                    color="primary.light"
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => setMore(true)}
+                    ml="56px"
+                  >
+                    Xem thêm
+                  </Box>
+                )} */}
+              </Accordion>
+            ))}
+          </>
+        ))}
       </Stack>
     </Stack>
   );

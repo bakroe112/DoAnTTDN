@@ -1,12 +1,13 @@
 import { EmblaCarousel } from "@/components/carousel";
 import { ProductCard } from "@/components/productSlider/productCard";
-import { productItem } from "@/data/ProductItem";
 import { Icon } from "@iconify-icon/react";
-import { Box, Button, Divider, Stack, Typography } from "@mui/material";
+import { Divider, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 export const ProductSection = ({ title, colorFont }) => {
   const [onHover, setonHover] = useState(false);
+  const product = useSelector((store) => store.products);
   useEffect(() => {}, []);
   return (
     <Stack>
@@ -35,7 +36,10 @@ export const ProductSection = ({ title, colorFont }) => {
             cursor: "pointer",
           }}
         >
-          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+          <Typography
+            variant="body2"
+            sx={{ fontWeight: 600, color: "text.primary" }}
+          >
             Xem tất cả
           </Typography>
           <Icon icon="solar:alt-arrow-right-linear" width="18" height="18" />
@@ -53,7 +57,7 @@ export const ProductSection = ({ title, colorFont }) => {
           space="16"
           count={5}
           position={20}
-          list={productItem.slice(0, 8)}
+          list={product.products.slice(0, 8)}
         >
           {(item) => <ProductCard height={500} item={item} />}
         </EmblaCarousel>

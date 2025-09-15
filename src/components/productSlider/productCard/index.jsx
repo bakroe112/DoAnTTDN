@@ -1,7 +1,9 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 export const ProductCard = ({ item, radius, height, width }) => {
   const formatted = new Intl.NumberFormat("vi-VN");
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -23,6 +25,7 @@ export const ProductCard = ({ item, radius, height, width }) => {
         width="100%"
         height="100%"
         className="object-contain hover:scale-105 transition duration-300 cursor-pointer"
+        onClick={() => navigate(`/shop/${item.sku}`)}
       />
       <Stack sx={{ gap: "5px" }}>
         <Typography
@@ -37,6 +40,7 @@ export const ProductCard = ({ item, radius, height, width }) => {
             textTransform: "uppercase",
             fontWeight: 500,
           }}
+          onClick={() => navigate(`/shop/${item.sku}`)}
         >
           {item.brandName}
         </Typography>
@@ -49,6 +53,7 @@ export const ProductCard = ({ item, radius, height, width }) => {
             WebkitBoxOrient: "vertical",
             cursor: "pointer",
           }}
+          onClick={() => navigate(`/shop/${item.sku}`)}
         >
           {item.name}
         </Typography>
@@ -59,22 +64,24 @@ export const ProductCard = ({ item, radius, height, width }) => {
           <Typography
             variant="subtitle2"
             sx={{ color: "primary.main", fontWeight: 800, cursor: "pointer" }}
+            onClick={() => navigate(`/shop/${item.sku}`)}
           >
-            {formatted.format(item.latestPrice)} ₫
+            {formatted.format(item.sellPrice)} ₫
           </Typography>
 
           <Stack
             direction="row"
             sx={{ gap: "5px", paddingX: "4px", cursor: "pointer" }}
+            onClick={() => navigate(`/shop/${item.sku}`)}
           >
             <Typography
               variant="captiontext"
               sx={{ color: "text.disabled", textDecoration: " line-through" }}
             >
-              {formatted.format(item.supplierRetailPrice)} ₫{" "}
+              {formatted.format(item.supplierRetailPrice)} ₫
             </Typography>
             <Typography variant="captiontext" sx={{ color: "error.main" }}>
-              -{item.discountPercent}%
+              -{item.discountAmount}%
             </Typography>
           </Stack>
         </Stack>

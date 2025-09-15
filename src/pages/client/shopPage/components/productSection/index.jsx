@@ -1,19 +1,12 @@
 import { ProductCard } from "@/components/productSlider/productCard";
-import { productItem } from "@/data/ProductItem";
-import { Icon } from "@iconify-icon/react";
-import {
-  Box,
-  Divider,
-  Grid,
-  Pagination,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, Grid, Stack, Typography } from "@mui/material";
 import React from "react";
-import { FilterSection } from "../filterSection";
 import { SortSection } from "../sortSection";
+import { useSelector } from "react-redux";
 
 export const ProductSection = () => {
+  const products = useSelector((store) => store.products);
+
   return (
     <Box sx={{ bgcolor: "background.paper", borderRadius: "5px" }}>
       <Stack>
@@ -32,7 +25,8 @@ export const ProductSection = () => {
               fontWeight: 700,
             }}
           >
-            Điện thoại - Máy tính bảng - Đồng hồ thông minh
+            {/* Điện thoại - Máy tính bảng - Đồng hồ thông minh */}
+            Số lượng sản phẩm
           </Typography>
           <Typography
             variant="h5"
@@ -41,7 +35,7 @@ export const ProductSection = () => {
               fontWeight: 500,
             }}
           >
-            (141 sản phẩm)
+            ({products.products.length} sản phẩm)
           </Typography>
         </Stack>
         <Divider sx={{ bgcolor: "white", borderBottomWidth: 2 }} />
@@ -69,16 +63,22 @@ export const ProductSection = () => {
                 justifyContent: "center",
               }}
             >
-              {productItem.map((item) => (
-                <Grid size="5">
-                  <ProductCard
-                    item={item}
-                    height={460}
-                    width={240}
-                    radius={0}
-                  />
-                </Grid>
-              ))}
+              {products.products.length == 0 ? (
+                <Typography>Đã hết sản phẩm mất rồi...</Typography>
+              ) : (
+                <>
+                  {products.products.map((item) => (
+                    <Grid size="5">
+                      <ProductCard
+                        item={item}
+                        height={460}
+                        width={240}
+                        radius={0}
+                      />
+                    </Grid>
+                  ))}
+                </>
+              )}
             </Grid>
           </Box>
         </Stack>

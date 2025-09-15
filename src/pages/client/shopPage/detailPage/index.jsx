@@ -1,4 +1,3 @@
-import { productDetailData } from "@/data/ProductDetailData";
 import { Icon } from "@iconify-icon/react";
 import {
   Avatar,
@@ -21,9 +20,16 @@ import {
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ProductSection } from "../../landingPage/section/productSection";
-import ProductData from "@/data/ProductData";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductByKey } from "@/store/product/Action";
+
+const decodeUnicode = (str = "") => {
+  return str
+    .replace(/\\u003c/g, "<")
+    .replace(/\\u003e/g, ">")
+    .replace(/\\u0026/g, "&")
+    .replace(/\\"/g, '"'); // xử lý dấu "
+};
 
 export const DetailPage = () => {
   const onHoverImage = {
@@ -43,10 +49,7 @@ export const DetailPage = () => {
   React.useEffect(() => {
     dispatch(getProductByKey(id));
   }, []);
-  console.log("products: ", product);
-  // console.log("image 0: ", product.product.images[0]);
   const [getImageUrl, setGetImageUrl] = useState("");
-  const productInfoImage = product.product?.images[0];
   return (
     <>
       {product.loading_product ? (
@@ -113,7 +116,7 @@ export const DetailPage = () => {
                             <img
                               src={
                                 getImageUrl === ""
-                                  ? productInfoImage
+                                  ? product.product?.imageUrl
                                   : getImageUrl
                               }
                               className="size-full object-cover"
@@ -134,23 +137,14 @@ export const DetailPage = () => {
                               ))}
                             </Stack>
                             <Divider />
-                            <Stack sx={{ gap: "5px", p: "8px" }}>
-                              <Typography variant="body2">
-                                - Kích thước: 22" (1920 x 1080), Tỷ lệ 16:9
-                              </Typography>
-                              <Typography variant="body2">
-                                - Tấm nền IPS, Góc nhìn: 178 (H) / 178 (V)
-                              </Typography>
-                              <Typography variant="body2">
-                                - Tần số quét: 75Hz , Thời gian phản hồi 5 ms
-                              </Typography>
-                              <Typography variant="body2">
-                                - Hiển thị màu sắc: 16.7 triệu màu
-                              </Typography>
-                              <Typography variant="body2">
-                                - Cổng hình ảnh: 1 x HDMI 1.4, 1 x VGA/D-sub,
-                              </Typography>
-                            </Stack>
+                            <Stack
+                              sx={{ gap: "5px", p: "8px" }}
+                              dangerouslySetInnerHTML={{
+                                __html: decodeUnicode(
+                                  product.product?.shortDescription
+                                ),
+                              }}
+                            ></Stack>
                             <Typography
                               variant="body2"
                               sx={{ color: "primary.light", cursor: "pointer" }}
@@ -234,10 +228,8 @@ export const DetailPage = () => {
                                   cursor: "pointer",
                                 }}
                               >
-                                {formatPrice.format(
-                                  product.product?.latestPrice
-                                )}
-                                ₫{/* 2.390.000₫ */}
+                                {formatPrice.format(product.product?.sellPrice)}
+                                ₫
                               </Typography>
 
                               <Stack
@@ -511,10 +503,7 @@ export const DetailPage = () => {
                       </Typography>
                       <Box
                         dangerouslySetInnerHTML={{
-                          __html:
-                            product.product?.description == ""
-                              ? "Đang bổ sung"
-                              : product.product?.description,
+                          __html: decodeUnicode(product.product?.description),
                         }}
                         sx={{
                           ".image": {

@@ -16,7 +16,6 @@ export const EmblaCarousel = ({
   count,
   list,
   space,
-  button,
 }) => {
   const [onHover, setonHover] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel(
