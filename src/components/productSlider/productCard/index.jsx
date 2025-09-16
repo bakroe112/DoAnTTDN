@@ -1,9 +1,14 @@
+import { useStateContext } from "@/context";
+import addCart from "@/function/addCart";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 export const ProductCard = ({ item, radius, height, width }) => {
+  const { cart, setCart } = useStateContext();
   const formatted = new Intl.NumberFormat("vi-VN");
   const navigate = useNavigate();
+  const quantityValue = 1;
+
   return (
     <Box
       sx={{
@@ -85,7 +90,14 @@ export const ProductCard = ({ item, radius, height, width }) => {
             </Typography>
           </Stack>
         </Stack>
-        <Button variant="outlined" sx={{ border: 1, borderRadius: "5px" }}>
+        <Button
+          variant="outlined"
+          sx={{ border: 1, borderRadius: "5px" }}
+          onClick={() => {
+            addCart(cart, setCart, item, quantityValue);
+            navigate("/checkout");
+          }}
+        >
           Thêm vào giỏ
         </Button>
       </Stack>

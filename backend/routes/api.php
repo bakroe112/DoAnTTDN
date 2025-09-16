@@ -1,7 +1,7 @@
 <?php
-
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductResource;
@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('products', ProductController::class);
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('attributes', AttributeController::class);
+Route::apiResource('orders', OrderController::class);
+
 
 Route::get("/all-products", function () {
     return ProductResource::collection(Product::all());

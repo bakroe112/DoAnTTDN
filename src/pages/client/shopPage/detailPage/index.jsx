@@ -18,10 +18,12 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { ProductSection } from "../../landingPage/section/productSection";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductByKey } from "@/store/product/Action";
+import addCart from "@/function/addCart";
+import { useStateContext } from "@/context";
 
 const decodeUnicode = (str = "") => {
   return str
@@ -32,6 +34,7 @@ const decodeUnicode = (str = "") => {
 };
 
 export const DetailPage = () => {
+  const navigate = useNavigate();
   const onHoverImage = {
     outline: 1,
     outlineColor: "primary.main",
@@ -41,7 +44,8 @@ export const DetailPage = () => {
 
   const formatPrice = new Intl.NumberFormat("vi-VN");
   const [onOpenDetail, setOnOpenDetail] = useState(true);
-
+  const [quantityValue, setQuantityValue] = React.useState(1);
+  const { cart, setCart } = useStateContext();
   const { id } = useParams();
   const product = useSelector((store) => store.products);
   const dispatch = useDispatch();
@@ -50,7 +54,7 @@ export const DetailPage = () => {
     dispatch(getProductByKey(id));
   }, []);
   const [getImageUrl, setGetImageUrl] = useState("");
-  console.log("product", product);
+  // console.log("product", product);
   return (
     <>
       {product.loading_product == true ? (
@@ -218,6 +222,10 @@ export const DetailPage = () => {
                               <Typography variant="captiontext">
                                 SKU: {product.product?.sku}
                               </Typography>
+                              <Icon icon="ci:line-m" width="24" height="24" />
+                              <Typography variant="captiontext">
+                                Số lượng: {product.product?.quantity}
+                              </Typography>
                             </Stack>
 
                             <Stack>
@@ -264,8 +272,20 @@ export const DetailPage = () => {
 
                             <Stack spacing={3}>
                               <Divider />
-                              <Button variant="contained" size="large">
-                                Liên hệ
+                              <Button
+                                variant="contained"
+                                size="large"
+                                onClick={() => {
+                                  addCart(
+                                    cart,
+                                    setCart,
+                                    product.product,
+                                    quantityValue
+                                  );
+                                  navigate("/checkout");
+                                }}
+                              >
+                                Thêm vào giỏ hàng
                               </Button>
                               <Divider />
                             </Stack>

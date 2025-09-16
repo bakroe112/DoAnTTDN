@@ -6,13 +6,16 @@ import { MuiTheme } from "./theme";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import "./index.css";
+import ThemeContext from "./context";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={MuiTheme}>
-        <MainRouter />
-      </ThemeProvider>
-    </Provider>
+    <ThemeContext>
+      <Provider store={store}>
+        <ThemeProvider theme={MuiTheme}>
+          <MainRouter />
+        </ThemeProvider>
+      </Provider>
+    </ThemeContext>
   </StrictMode>
 );

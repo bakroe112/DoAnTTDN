@@ -1,4 +1,5 @@
 import { CategoryListItem } from "@/components/categoryList";
+import { useStateContext } from "@/context";
 import { Icon } from "@iconify-icon/react/dist/iconify.js";
 import {
   alpha,
@@ -13,55 +14,24 @@ import {
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-//  <CategoryListItem sx={{}}/>
-const headerSectionItems = [
-  {
-    id: 1,
-    icon: "solar:user-circle-linear",
-    title1: "Đăng nhập",
-    title2: "Đăng ký",
-    action: () => {},
-    link: "/",
-  },
-  {
-    id: 2,
-    icon: "solar:bell-linear",
-    action: () => {},
-    link: "/",
-  },
-  {
-    id: 3,
-    icon: "solar:cart-large-2-linear",
-    title1: "Giỏ hàng của bạn",
-    title2: "(0) sản phẩm",
-    action: () => {},
-    link: "/",
-  },
-];
 const itemSections = [
   {
     title: "RTX 5060",
-    link: "/",
   },
   {
     title: "RTX 5060 Ti",
-    link: "/",
   },
   {
     title: "Mac Mini M4",
-    link: "/",
   },
   {
     title: "iPhone 16 Promax",
-    link: "/",
   },
   {
     title: "Màn hình",
-    link: "/",
   },
   {
     title: "Build PC",
-    link: "/",
   },
 ];
 export const HeaderSection = () => {
@@ -72,6 +42,7 @@ export const HeaderSection = () => {
     setOnClick(!onClick);
   };
   const [isScrolled, setIsScrolled] = useState(false);
+  const { cart, setCart } = useStateContext();
 
   const handleScrolled = () => {
     setIsScrolled(window.scrollY > 0);
@@ -97,11 +68,7 @@ export const HeaderSection = () => {
       ref={scrollRef}
     >
       <Stack direction="row" spacing={2}>
-        <Collapse
-          in={!isScrolled}
-          orientation="horizontal"
-          unmountOnExit
-        >
+        <Collapse in={!isScrolled} orientation="horizontal" unmountOnExit>
           <img
             src="https://shopfront-cdn.tekoapis.com/static/phongvu/logo-full.svg"
             alt=""
@@ -166,14 +133,14 @@ export const HeaderSection = () => {
           >
             {itemSections.map((item) => (
               <Typography
-                component={Link}
-                to={item.link}
                 variant="caption"
                 sx={{
                   ":hover": {
                     color: "#1435C3",
                   },
+                  cursor: "pointer",
                 }}
+                onClick={() => navigate(`/shop?categories=${item.title}`)}
               >
                 {item.title}
               </Typography>
@@ -181,9 +148,24 @@ export const HeaderSection = () => {
           </Stack>
         </Stack>
         <Stack direction="row" alignItems="start" spacing={3}>
-          {headerSectionItems.map((item) => (
-            <HeaderSectionItem item={item} key={item.id} />
-          ))}
+          <HeaderSectionItem
+            icon="solar:user-circle-linear"
+            title1="Đăng nhập"
+            title2="Đăng ký"
+            link=""
+          />
+          <HeaderSectionItem
+            icon="solar:bell-linear"
+            title1=""
+            title2=""
+            link=""
+          />
+          <HeaderSectionItem
+            icon="solar:cart-large-2-linear"
+            title1="Giỏ hàng của bạn"
+            title2={`( ${cart.products.length} ) sản phẩm`}
+            link="/checkout"
+          />
         </Stack>
       </Stack>
       {onClick && isScrolled && (
@@ -215,26 +197,27 @@ export const HeaderSection = () => {
   );
 };
 
-const HeaderSectionItem = ({ item }) => {
+const HeaderSectionItem = ({ icon, title1, title2, link }) => {
+  const navigate = useNavigate();
   return (
     <Stack
-      component={Link}
-      to={item.link}
       direction="row"
       sx={{
         alignItems: "center",
         gap: "8px",
         color: "text.secondary",
         typography: "body2",
+        cursor: "pointer",
         ":hover": {
           color: "#1435C3",
         },
       }}
+      onClick={() => navigate(link)}
     >
-      <Icon icon={item.icon} width="32" height="32" />
+      <Icon icon={icon} width="32" height="32" />
       <Stack>
-        <Typography variant="captiontext">{item.title1}</Typography>
-        <Typography variant="captiontext">{item.title2}</Typography>
+        <Typography variant="captiontext">{title1}</Typography>
+        <Typography variant="captiontext">{title2}</Typography>
       </Stack>
     </Stack>
   );
