@@ -4,8 +4,10 @@ import { Box, Grid, Stack, Typography } from "@mui/material";
 import { EmblaCarousel } from "../carousel";
 import { productItem } from "@/data/ProductItem";
 import { Icon } from "@iconify-icon/react";
+import { useNavigate } from "react-router-dom";
 
 export const ProductSlider = ({ products }) => {
+  const navigate = useNavigate();
   return (
     <Grid
       container
@@ -44,9 +46,10 @@ export const ProductSlider = ({ products }) => {
               color: "background.paper",
               cursor: "pointer",
             }}
+            onClick={() => navigate("/shop")}
           >
             <Typography variant="body2" sx={{ fontWeight: 600 }}>
-              Xem tất cả{" "}
+              Xem tất cả
             </Typography>
             <Icon icon="solar:alt-arrow-right-linear" width="18" height="18" />
           </Stack>

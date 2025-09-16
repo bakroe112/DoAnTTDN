@@ -31,7 +31,11 @@ export const CategoryListItem = ({ sx, borderRadius }) => {
           paddingY: "5px",
           bgcolor: "#fff",
           overflow: "hidden",
-          borderRadius: onHover !== null ? "10px 0px 0px 10px" : borderR,
+          borderRadius:
+            onHover !== null &&
+            categories.categories?.[onHover]?.children?.length > 0
+              ? "10px 0px 0px 10px"
+              : borderR,
         }}
       >
         {categories.categories.map((item, index) => (
