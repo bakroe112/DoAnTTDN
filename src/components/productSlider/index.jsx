@@ -5,7 +5,7 @@ import { EmblaCarousel } from "../carousel";
 import { productItem } from "@/data/ProductItem";
 import { Icon } from "@iconify-icon/react";
 
-export const ProductSlider = () => {
+export const ProductSlider = ({ products }) => {
   return (
     <Grid
       container
@@ -24,7 +24,7 @@ export const ProductSlider = () => {
           }}
         >
           <Typography variant="h6" color="background.paper">
-            Kết thúc sau ... ngày
+            Kết thúc sau 10 ngày
           </Typography>
         </Stack>
       </Grid>
@@ -57,9 +57,25 @@ export const ProductSlider = () => {
             paddingX: "8px",
           }}
         >
-          <EmblaCarousel space="16" count={5} list={productItem.slice(0, 8)}>
-            {(item) => <ProductCard height={420} radius={5} item={item} />}
-          </EmblaCarousel>
+          {products.length > 0 ? (
+            <EmblaCarousel space="16" count={5} list={products.slice(0, 8)}>
+              {(item) => <ProductCard height={420} radius={5} item={item} />}
+            </EmblaCarousel>
+          ) : (
+            <Box
+              sx={{
+                width: "100%",
+                height: "420px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "white",
+                fontWeight: 600,
+              }}
+            >
+              Không có sản phẩm nào
+            </Box>
+          )}
         </Box>
       </Grid>
     </Grid>

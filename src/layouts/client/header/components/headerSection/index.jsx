@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 //  <CategoryListItem sx={{}}/>
 const headerSectionItems = [
   {
@@ -65,6 +65,7 @@ const itemSections = [
   },
 ];
 export const HeaderSection = () => {
+  const navigate = useNavigate();
   const scrollRef = useRef();
   const [onClick, setOnClick] = useState(false);
   const handleClickButton = () => {
@@ -99,13 +100,15 @@ export const HeaderSection = () => {
         <Collapse
           in={!isScrolled}
           orientation="horizontal"
-          // timeout={200}
           unmountOnExit
         >
           <img
             src="https://shopfront-cdn.tekoapis.com/static/phongvu/logo-full.svg"
             alt=""
-            className="w-[251px] h-[35px]"
+            className="w-[251px] h-[35px] cursor-pointer"
+            onClick={() => {
+              navigate("/");
+            }}
           />
         </Collapse>
 
@@ -114,7 +117,10 @@ export const HeaderSection = () => {
             <img
               src="https://shopfront-cdn.tekoapis.com/static/phongvu/logo.svg"
               alt=""
-              className="w-[35px] h-[35px]"
+              className="w-[35px] h-[35px] cursor-pointer"
+              onClick={() => {
+                navigate("/");
+              }}
             />
             <Button
               variant="outlined"

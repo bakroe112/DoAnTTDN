@@ -1,13 +1,19 @@
 import { EmblaCarousel } from "@/components/carousel";
 import { ProductCard } from "@/components/productSlider/productCard";
 import { Icon } from "@iconify-icon/react";
-import { Divider, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-export const ProductSection = ({ title, colorFont }) => {
+export const ProductSection = ({ title, colorFont, flag }) => {
   const [onHover, setonHover] = useState(false);
   const product = useSelector((store) => store.products);
+
+  const filteredProducts = product?.products.filter((p) =>
+    p?.categories.some((cat) =>
+      title ? cat.name?.toLowerCase().includes(title.toLowerCase()) : false
+    )
+  );
   useEffect(() => {}, []);
   return (
     <Stack>
@@ -26,7 +32,7 @@ export const ProductSection = ({ title, colorFont }) => {
             textTransform: "uppercase",
           }}
         >
-          {title}
+          {flag ? "Sản phẩm có liên quan" : title}
         </Typography>
         <Stack
           direction="row"
@@ -52,15 +58,31 @@ export const ProductSection = ({ title, colorFont }) => {
         onMouseEnter={() => setonHover(true)}
         onMouseLeave={() => setonHover(false)}
       >
-        <EmblaCarousel
-          button={onHover}
-          space="16"
-          count={5}
-          position={20}
-          list={product.products.slice(0, 8)}
-        >
-          {(item) => <ProductCard height={500} item={item} />}
-        </EmblaCarousel>
+        {filteredProducts.length > 0 ? (
+          <EmblaCarousel
+            button={onHover}
+            space="16"
+            count={5}
+            position={20}
+            list={filteredProducts.slice(0, 8)}
+          >
+            {(item) => <ProductCard height={500} item={item} />}
+          </EmblaCarousel>
+        ) : (
+          <Box
+            sx={{
+              width: "100%",
+              height: "500px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "white",
+              fontWeight: 600,
+            }}
+          >
+            Không có sản phẩm nào
+          </Box>
+        )}
       </Stack>
     </Stack>
   );

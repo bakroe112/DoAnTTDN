@@ -17,13 +17,8 @@ export const ShopPage = () => {
   const navigate = useNavigate();
   const { search } = window.location;
   const searchParams = new URLSearchParams(search);
-
-  // console.log("search ", search);
-  // console.log("searchParams ", searchParams.toString());
-
   const products = useSelector((store) => store.products);
 
-  // console.log("products", products);
   return (
     <Box sx={{ bgcolor: "background.neutral" }}>
       <Box sx={{ p: "20px 240px" }}>

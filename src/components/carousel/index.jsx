@@ -54,7 +54,7 @@ export const EmblaCarousel = ({
         }}
         className="embla__container"
       >
-        {list.map((item) => (
+        {list.map((item, index) => (
           <Box
             className="embla__slide"
             sx={{
@@ -63,7 +63,7 @@ export const EmblaCarousel = ({
               paddingLeft: `${space}px`,
             }}
           >
-            {children(item)}
+            {children(item, index)}
           </Box>
         ))}
       </Box>

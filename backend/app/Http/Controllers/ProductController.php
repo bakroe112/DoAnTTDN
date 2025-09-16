@@ -32,7 +32,12 @@ class ProductController extends Controller
         if ($category) {
             $categories = explode(',', $category);
             $products->whereHas('categories', function ($q) use ($categories) {
-                $q->whereIn('categories.name', $categories);
+                // $q->whereIn('categories.name', $categories);
+                $q->where(function ($query) use ($categories) {
+                    foreach ($categories as $cat) {
+                        $query->orWhere('categories.name', 'like', "%{$cat}%");
+                    }
+                });
             });
         }
 

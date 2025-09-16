@@ -19,10 +19,17 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export const FilterSection = () => {
+  const { search } = window.location;
+  const searchParams = new URLSearchParams(search);
+  const navigate = useNavigate();
   const filter = new Intl.NumberFormat("vi-VN");
-  const [value, setValue] = useState([0, 50000000]);
+  const initialPrice = searchParams.get("price")
+    ? searchParams.get("price").split("-").map(Number)
+    : [0, 50000000];
+  const [value, setValue] = useState(initialPrice);
   const [getValueCategories, setGetValueCategories] = React.useState([]);
 
+  // Slider
   const valuetext = (value) => {
     return `${filter.format(value)}`;
   };
@@ -33,12 +40,12 @@ export const FilterSection = () => {
       setValue([value[0], Math.max(newValue[1], value[0])]);
     }
   };
-
+  const handleChangeCommitted = () => {
+    searchParams.set("price", value.join("-"));
+    navigate(`?${searchParams.toString()}`);
+  };
+  // console.log("Value", value);
   // CheckBox
-  const { search } = window.location;
-  const searchParams = new URLSearchParams(search);
-  const navigate = useNavigate();
-
   const handleChangeCheck = (e, name) => {
     let updatedCate = [...getValueCategories];
     if (e.target.checked) {
@@ -69,7 +76,7 @@ export const FilterSection = () => {
   const [more, setMore] = useState(false);
 
   const product = useSelector((store) => store.products);
-  console.log("product", product);
+  // console.log("product", product);
 
   const categories = useSelector((store) => store.categories);
   const ListCategory = categories.categories;
@@ -115,6 +122,7 @@ export const FilterSection = () => {
           <Slider
             value={value}
             onChange={handleChange}
+            onChangeCommitted={handleChangeCommitted}
             valueLabelDisplay="auto"
             valueLabelFormat={valuetext}
             disableSwap

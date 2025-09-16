@@ -45,7 +45,6 @@ const MenuProps = {
 export const AddProductPage = () => {
   const [getCategories, setGetCategories] = React.useState([]);
   const [getAttributes, setGetAttributes] = React.useState([]);
-  const [getSellPrice, setGetSellPrice] = React.useState(0);
   const [imageUrl, setImageUrl] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const categories = useSelector((store) => store.categories.categories);
@@ -72,16 +71,36 @@ export const AddProductPage = () => {
     dispatch(getCategoryTree());
     dispatch(getAttributeTree());
   }, []);
-
+  const findCategoryPath = (categories, targetId, path = []) => {
+    for (const cate of categories) {
+      if (cate.id === targetId) {
+        return [...path, cate.id];
+      }
+      if (cate.children?.length > 0) {
+        const result = findCategoryPath(cate.children, targetId, [
+          ...path,
+          cate.id,
+        ]);
+        if (result) return result;
+      }
+    }
+    return null;
+  };
   const handleChangeCategories = (event) => {
     const {
       target: { value },
     } = event;
-    setGetCategories(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
+
+    const selectedIds = typeof value === "string" ? value.split(",") : value;
+    // Lấy cả cha + ông cho từng id
+    const fullIds = selectedIds.flatMap((id) =>
+      findCategoryPath(categories, id)
     );
-    setProduct({ ...product, categories: value });
+    // Loại bỏ trùng lặp
+    const uniqueIds = [...new Set(fullIds)];
+    setGetCategories(selectedIds);
+    setProduct({ ...product, categories: uniqueIds });
+    console.log("uniqueIds", uniqueIds);
   };
   const handleChangeAttributes = (event) => {
     const {

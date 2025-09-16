@@ -50,9 +50,10 @@ export const DetailPage = () => {
     dispatch(getProductByKey(id));
   }, []);
   const [getImageUrl, setGetImageUrl] = useState("");
+  console.log("product", product);
   return (
     <>
-      {product.loading_product ? (
+      {product.loading_product == true ? (
         <Stack
           sx={{
             height: "100vh",
@@ -626,8 +627,9 @@ export const DetailPage = () => {
                 {/* Bottom */}
                 <Box sx={{ bgcolor: "background.paper" }}>
                   <ProductSection
-                    title="Sản phẩm liên quan"
+                    title={product.product?.categories[0].name}
                     colorFont="black"
+                    flag={true}
                   />
                 </Box>
               </Stack>

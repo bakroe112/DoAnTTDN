@@ -147,10 +147,11 @@ export const AddCategoryPage = () => {
             }}
             onClick={() => {
               dispatch(addNewCategory(category));
-              categories.loading === false && navigate("/admin/categories");
+              // categories.loading === false && navigate("/admin/categories");
+              setCategory({ ...category, name: "" });
             }}
           >
-            Create Product
+            Create Category
           </Button>
         </Stack>
       </Stack>

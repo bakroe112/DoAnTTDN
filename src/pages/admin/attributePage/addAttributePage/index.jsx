@@ -149,10 +149,11 @@ export const AddAttributePage = () => {
             }}
             onClick={() => {
               dispatch(addNewAttribute(attribute));
-              attributes.loading === false && navigate("/admin/attributes");
+              // attributes.loading === false && navigate("/admin/attributes");
+              setAttributes({ ...attribute, value: "", parent_id: "" });
             }}
           >
-            Create Product
+            Create Attribute
           </Button>
         </Stack>
       </Stack>

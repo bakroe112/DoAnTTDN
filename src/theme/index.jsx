@@ -12,7 +12,7 @@ export function MuiTheme() {
     palette,
     typography,
     fontFamily: primaryFont,
-    shadows,
+    shadows: shadows.main,
     components: ComponentsCustom(shadows, palette, typography),
   });
 }

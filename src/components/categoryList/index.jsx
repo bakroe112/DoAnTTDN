@@ -1,12 +1,19 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import { Icon } from "@iconify-icon/react";
-import { categoryListItem, categoryMap } from "./CategogyListItem";
+import { categoryListIcon } from "./CategoryListItem";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const CategoryListItem = ({ sx, borderRadius }) => {
-  const [onHover, setOnHover] = useState(false);
-  const boderR = !borderRadius ? "10px" : borderRadius;
+  const navigate = useNavigate();
+  const [onHover, setOnHover] = React.useState(false);
+  const borderR = !borderRadius ? "10px" : borderRadius;
+  const categories = useSelector((store) => store.categories);
+
+  // console.log("categories", categories);
+
   return (
     <Stack
       direction="row"
@@ -24,38 +31,75 @@ export const CategoryListItem = ({ sx, borderRadius }) => {
           paddingY: "5px",
           bgcolor: "#fff",
           overflow: "hidden",
-          borderRadius: onHover ? "0px 0px 0px 10px" : boderR,
+          borderRadius: onHover !== null ? "10px 0px 0px 10px" : borderR,
         }}
       >
-        {categoryListItem.map((item) => (
-          <CategoryCard item={item} setOnHover={setOnHover} />
+        {categories.categories.map((item, index) => (
+          <CategoryCard
+            item={item}
+            index={index}
+            setOnHover={setOnHover}
+            navigate={navigate}
+          />
         ))}
       </Stack>
 
-      {onHover && (
-        <Box
-          sx={{
-            columns: 5,
-            width: "900px",
-            bgcolor: "#fff",
-            borderRadius: "0px 10px 10px 0px",
-            padding: "10px",
-            position: "absolute",
-            left: 200,
-            minHeight: "520px",
-            zIndex:1001
-          }}
-        >
-          {(categoryMap[onHover - 1] || []).map((items, index) => (
-            <CategoryCardItem item={items} key={index} />
-          ))}
-        </Box>
-      )}
+      {onHover !== null &&
+        categories.categories?.[onHover]?.children?.length > 0 && (
+          <Box
+            sx={{
+              columns: 5,
+              width: "900px",
+              bgcolor: "#fff",
+              borderRadius: "0px 10px 10px 0px",
+              padding: "10px",
+              position: "absolute",
+              left: 200,
+              minHeight: "520px",
+              zIndex: 1001,
+            }}
+          >
+            {categories.categories[onHover]?.children.map((item) => (
+              <CategoryCardItem item={item} key={item.id} navigate={navigate} />
+            ))}
+          </Box>
+        )}
     </Stack>
   );
 };
 
-export const CategoryCardItem = ({ item }) => {
+export const CategoryCard = ({ item, index, setOnHover, navigate }) => {
+  return (
+    <Stack
+      onMouseEnter={() => setOnHover(index)}
+      direction="row"
+      sx={{
+        alignItems: "center",
+        padding: "3px 5px",
+        gap: "5px",
+        ":hover": {
+          bgcolor: "#F4F6F8",
+          color: "#1435C3",
+        },
+        borderRadius: "10px",
+        cursor: "pointer",
+      }}
+      onClick={() => navigate(`/shop?categories=${item.name}`)}
+    >
+      <Icon icon={categoryListIcon[index].icon} width="24" height="24" />
+      <Typography
+        sx={{
+          fontSize: "13px",
+          fontWeight: 600,
+        }}
+      >
+        {item.name}
+      </Typography>
+    </Stack>
+  );
+};
+
+export const CategoryCardItem = ({ item, navigate }) => {
   return (
     <Box
       sx={{
@@ -80,54 +124,25 @@ export const CategoryCardItem = ({ item }) => {
           gap: "5px",
         }}
       >
-        {item.list.map((item) => (
+        {item.children.map((item) => (
           <Stack
             sx={{
               "&:hover": {
                 color: "#1435C3",
               },
             }}
+            onClick={() => navigate(`/shop?categories=${item.name}`)}
           >
             <Typography
               sx={{
                 fontSize: "15px",
               }}
             >
-              {item}
+              {item.name}
             </Typography>
           </Stack>
         ))}
       </Stack>
     </Box>
-  );
-};
-
-export const CategoryCard = ({ item, setOnHover }) => {
-  return (
-    <Stack
-      onMouseEnter={() => setOnHover(item.id)}
-      direction="row"
-      sx={{
-        alignItems: "center",
-        padding: "3px 5px",
-        gap: "5px",
-        ":hover": {
-          bgcolor: "#F4F6F8",
-          color: "#1435C3",
-        },
-        borderRadius: "10px",
-        cursor: "pointer",
-      }}
-    >
-      <Icon icon={item.icon} width="24" height="24" />
-      <Typography
-        sx={{
-          fontSize: "13px",
-          fontWeight: 600,
-        }}
-      >
-        {item.title}
-      </Typography>
-    </Stack>
   );
 };

@@ -17,15 +17,37 @@ import React, { useState } from "react";
 import { ProductSection } from "./section/productSection";
 import { Icon } from "@iconify-icon/react";
 import { ProductCard } from "@/components/productSlider/productCard";
-import { productItem } from "@/data/ProductItem";
 import { HeaderHelmet } from "@/components/header";
-import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { categoryListIcon } from "@/components/categoryList/CategoryListItem";
+import { useNavigate } from "react-router-dom";
+const categoryMap = [
+  "Laptop",
+  "Apple",
+  "Màn hình",
+  "Gaming Gear",
+  "Camera - Phụ kiện",
+  "Điện gia dụng",
+];
 export const LandingPage = () => {
+  const products = useSelector((store) => store.products);
+  const categories = useSelector((store) => store.categories);
+  const navigate = useNavigate();
   const [value, setValue] = useState(0);
-  const handleChange = (e, newValue) => {
+  // console.log("product", products.products);
+
+  //tab handleChang
+  const tabHandleChange = (e, newValue) => {
     setValue(newValue);
   };
+
+  const currentCategory = categoryMap[value];
+  const filteredProducts = products?.products.filter((p) =>
+    p.categories?.some((cat) =>
+      cat.name.toLowerCase().includes(currentCategory.toLowerCase())
+    )
+  );
+  //
   const a11yProps = (index) => {
     return {
       id: `${index}`,
@@ -106,8 +128,6 @@ export const LandingPage = () => {
                   gap: "12px",
                   textAlign: "center",
                 }}
-                component={Link}
-                to={"shop/1112"}
               >
                 <img
                   src={item.image}
@@ -145,7 +165,7 @@ export const LandingPage = () => {
             <Tabs
               variant="fullWidth"
               value={value}
-              onChange={handleChange}
+              onChange={tabHandleChange}
               sx={{
                 bgcolor: "Background.paper",
                 borderRadius: "5px 5px 0px 0px",
@@ -176,10 +196,10 @@ export const LandingPage = () => {
                 label={
                   <Box>
                     <Typography variant="h5" fontWeight="700">
-                      Linh kiện
+                      Apple
                     </Typography>
                     <Typography variant="captiontext" fontWeight="600">
-                      Giảm sốc 65%
+                      Giảm sốc {"<"} 20%
                     </Typography>
                   </Box>
                 }
@@ -214,7 +234,7 @@ export const LandingPage = () => {
                 label={
                   <Box>
                     <Typography variant="h5" fontWeight="700">
-                      Gear
+                      Gaming Gear
                     </Typography>
                     <Typography variant="captiontext" fontWeight="600">
                       Giảm sốc 43%
@@ -280,22 +300,22 @@ export const LandingPage = () => {
           </Box>
 
           <CustomTabPanel tab={value} index={0}>
-            <ProductSlider />
+            <ProductSlider products={filteredProducts} />
           </CustomTabPanel>
           <CustomTabPanel tab={value} index={1}>
-            <ProductSlider />
+            <ProductSlider products={filteredProducts} />
           </CustomTabPanel>
           <CustomTabPanel tab={value} index={2}>
-            <ProductSlider />
+            <ProductSlider products={filteredProducts} />
           </CustomTabPanel>
           <CustomTabPanel tab={value} index={3}>
-            <ProductSlider />
+            <ProductSlider products={filteredProducts} />
           </CustomTabPanel>
           <CustomTabPanel tab={value} index={4}>
-            <ProductSlider />
+            <ProductSlider products={filteredProducts} />
           </CustomTabPanel>
           <CustomTabPanel tab={value} index={5}>
-            <ProductSlider />
+            <ProductSlider products={filteredProducts} />
           </CustomTabPanel>
         </Box>
 
@@ -310,26 +330,37 @@ export const LandingPage = () => {
             Danh mục nổi bật
           </Typography>
 
-          <EmblaCarousel
-            count={10}
-            list={[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
-            space="44"
-          >
-            {(item) => (
-              <Stack sx={{ alignItems: "center", gap: "8px" }}>
-                <img
-                  src="https://lh3.googleusercontent.com/7ltR_x7umrC6a4IYEKTvsQXLAF5mQnwQhU-ClYdGyGoAqaB_zXwtn145dYrep47ZAoF8IJlz4yocnYC9dEZWPH618r4SFxiJ=rw"
-                  className=" object-cover size-full"
-                  alt=""
+          <EmblaCarousel count={10} list={categories.categories} space="44">
+            {(item, index) => (
+              <Stack
+                sx={{ alignItems: "center", gap: "8px", cursor: "pointer" }}
+                onClick={() => navigate(`/shop?categories=${item.name}`)}
+              >
+                <Icon
+                  icon={categoryListIcon[index].icon}
+                  width="56"
+                  height="56"
                 />
-                Laptop
+                <Typography
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    textAlign: "center",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    width: "100px",
+                  }}
+                >
+                  {item.name}
+                </Typography>
               </Stack>
             )}
           </EmblaCarousel>
         </Box>
 
         {/* Image tech slider */}
-        <Box
+        {/* <Box
           sx={{ bgcolor: "background.paper", p: "16px", borderRadius: "5px" }}
         >
           <Typography
@@ -365,7 +396,7 @@ export const LandingPage = () => {
               </Stack>
             )}
           </EmblaCarousel>
-        </Box>
+        </Box> */}
 
         {/* Ad image */}
         <Box>
@@ -386,9 +417,31 @@ export const LandingPage = () => {
             backgroundRepeat: "no-repeat",
           }}
         >
+          <ProductSection title="Apple" />
+        </Box>
+
+        {/* Product slider */}
+        <Box
+          sx={{
+            backgroundImage:
+              "url('https://lh3.googleusercontent.com/xskupSpD9GawQhJQMm7O6vs7CehOkGhsXUBc_n0PSO0ZT9dMECEzWeQsyDAMbk_BV-kupn3IYip2hD0xdkC7vn0jjhl6Tcc=w1232')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
           <ProductSection title="PC" />
         </Box>
 
+        {/* Ad image */}
+        <Box>
+          <img
+            src="https://lh3.googleusercontent.com/_gvYKVfDSEnexBdDanPl4kYr5Za0iU79GXluIjuxBI6d_9oy6DLKUq44J2yV38XAiwm7Zk8jJs3Ep7viPoTckU9W8gnepokatQ=w1232-rw"
+            className="object-cover size-full hover:scale-105 transition rounded-[10px] duration-300"
+            alt=""
+          />
+        </Box>
+
         {/* Product slider */}
         <Box
           sx={{
@@ -399,7 +452,7 @@ export const LandingPage = () => {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <ProductSection title="Linh kiện" />
+          <ProductSection title="Laptop - Máy tính xách tay" />
         </Box>
 
         {/* Ad image */}
@@ -421,29 +474,7 @@ export const LandingPage = () => {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <ProductSection title="Laptop Ai" />
-        </Box>
-
-        {/* Ad image */}
-        <Box>
-          <img
-            src="https://lh3.googleusercontent.com/_gvYKVfDSEnexBdDanPl4kYr5Za0iU79GXluIjuxBI6d_9oy6DLKUq44J2yV38XAiwm7Zk8jJs3Ep7viPoTckU9W8gnepokatQ=w1232-rw"
-            className="object-cover size-full hover:scale-105 transition rounded-[10px] duration-300"
-            alt=""
-          />
-        </Box>
-
-        {/* Product slider */}
-        <Box
-          sx={{
-            backgroundImage:
-              "url('https://lh3.googleusercontent.com/xskupSpD9GawQhJQMm7O6vs7CehOkGhsXUBc_n0PSO0ZT9dMECEzWeQsyDAMbk_BV-kupn3IYip2hD0xdkC7vn0jjhl6Tcc=w1232')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <ProductSection title="Laptop văn phòng" />
+          <ProductSection title="Laptop văn " />
         </Box>
 
         {/* Product slider */}
@@ -508,9 +539,10 @@ export const LandingPage = () => {
                   color: "text.disabled",
                   cursor: "pointer",
                 }}
+                onClick={() => navigate("/shop")}
               >
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                  Xem tất cả{" "}
+                  Xem tất cả
                 </Typography>
                 <Icon
                   icon="solar:alt-arrow-right-linear"
@@ -537,16 +569,22 @@ export const LandingPage = () => {
                     justifyContent: "center",
                   }}
                 >
-                  {productItem.map((item) => (
-                    <Grid size="5">
-                      <ProductCard
-                        item={item}
-                        height={460}
-                        width={240}
-                        radius={0}
-                      />
-                    </Grid>
-                  ))}
+                  {products.products.length == 0 ? (
+                    <Typography>Đã hết sản phẩm mất rồi...</Typography>
+                  ) : (
+                    <>
+                      {products.products.map((item) => (
+                        <Grid size="5">
+                          <ProductCard
+                            item={item}
+                            height={460}
+                            width={240}
+                            radius={0}
+                          />
+                        </Grid>
+                      ))}
+                    </>
+                  )}
                 </Grid>
               </Box>
               <Pagination
@@ -558,8 +596,8 @@ export const LandingPage = () => {
                 sx={{
                   "& .MuiPaginationItem-root": {
                     mx: 0.7,
-                    fontSize:"14px",
-                    fontWeight:600
+                    fontSize: "14px",
+                    fontWeight: 600,
                   },
                 }}
               />

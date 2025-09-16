@@ -10,7 +10,6 @@ import { getCategoryTree } from "@/store/category/Action";
 export const ClientLayout = () => {
   const dispatch = useDispatch();
   const products = useSelector((store) => store.products);
-  const categories = useSelector((store) => store.categories);
   const path = useLocation();
 
   React.useEffect(() => {
