@@ -236,7 +236,7 @@ export const ClientFooter = () => {
                 </Typography>
                 <Stack sx={{ gap: "8px", color: "text.secondary" }}>
                   <Typography variant="captiontext">
-                    © 1997 - 2020 Công Ty Cổ Phần Thương Mại - Dịch Vụ Phong Vũ
+                    © 1997 - 2020 Công Ty Cổ Phần Thương Mại - Dịch vụ Lê Ngọc Sơn
                   </Typography>
                   <Typography variant="captiontext">
                     Giấy chứng nhận đăng ký doanh nghiệp: 0304998358 do Sở KH-ĐT

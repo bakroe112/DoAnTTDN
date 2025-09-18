@@ -9,6 +9,7 @@ import {
   DashboardPage,
   DetailPage,
   LandingPage,
+  LoginPage,
   ShopPage,
   UpdateCategoryPage,
   UpdateProductPage,
@@ -28,6 +29,7 @@ export const itemRouter = createBrowserRouter([
       { path: "/shop", element: <ShopPage /> },
       { path: "/shop/:id", element: <DetailPage /> },
       { path: "/checkout", element: <CheckoutPage /> },
+      { path: "/login", element: <LoginPage /> },
     ],
   },
   {

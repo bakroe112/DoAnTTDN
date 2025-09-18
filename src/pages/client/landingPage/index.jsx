@@ -618,7 +618,7 @@ const itemHotSale = [
   {
     image:
       "https://lh3.googleusercontent.com/J1R3a7rFlStPeRg5iGUWphLKG627H_JMsz2YJQ0u0MNmYg0X1xmhIcsEZX8bkiWmzeU5bApIcEMJ1SLQW-lRbaOaR0GcZV0=rw",
-    title: "Tải app Phong vũ",
+    title: "Tải app",
   },
   {
     image:

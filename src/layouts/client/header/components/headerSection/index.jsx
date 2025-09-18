@@ -70,9 +70,9 @@ export const HeaderSection = () => {
       <Stack direction="row" spacing={2}>
         <Collapse in={!isScrolled} orientation="horizontal" unmountOnExit>
           <img
-            src="https://shopfront-cdn.tekoapis.com/static/phongvu/logo-full.svg"
+            src="/Logo.jpg"
             alt=""
-            className="w-[251px] h-[35px] cursor-pointer"
+            className="w-[250px] h-[60px] cursor-pointer mt-[-10px]"
             onClick={() => {
               navigate("/");
             }}

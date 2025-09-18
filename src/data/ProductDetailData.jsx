@@ -680,7 +680,7 @@ export const productDetailData = {
   },
   provider: {
     id: 1,
-    name: "CÔNG TY CỔ PHẦN THƯƠNG MẠI DỊCH VỤ PHONG VŨ",
+    name: "CÔNG TY CỔ PHẦN THƯƠNG MẠI DỊCH VỤ",
     logo: "https://lh3.googleusercontent.com/qOnchEYD7No58bjEQs5pf_05IV-0DmoaCmEFXD007VHs5cn16LZ6PC98IlY3OiBL9UXsEwNzwiVHRrvSDMQ",
     slogan: "",
   },
