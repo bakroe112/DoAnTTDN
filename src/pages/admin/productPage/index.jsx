@@ -18,14 +18,9 @@ import { getAllProduct } from "@/store/product/Action";
 
 export const AdminProductPage = () => {
   const products = useSelector((store) => store.products);
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getAllProduct());
-  }, []);
+  // console.log("products", products);
 
-  console.log("products", products);
-  
   const [paginationModel, setPaginationModel] = React.useState({
     pageSize: 5,
     page: 0,

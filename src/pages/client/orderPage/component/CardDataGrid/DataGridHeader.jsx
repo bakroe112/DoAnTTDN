@@ -17,7 +17,7 @@ function RenderProduct(props) {
         paddingRight: "12px",
       }}
     >
-      <img src={row.imageUrl} className="w-[70px] h-[70px] rounded-[12px]" />
+      <img src={row.image_url} className="w-[70px] h-[70px] rounded-[12px]" />
       <Typography
         variant="subtitle2"
         sx={{
@@ -147,7 +147,7 @@ const DataGridHeader = (rows, setRows) => {
       renderCell: RenderProduct,
     },
     {
-      field: "sellPrice",
+      field: "sell_price",
       headerName: "Đơn giá",
       width: 120,
       valueGetter: (value) => value,
@@ -168,7 +168,7 @@ const DataGridHeader = (rows, setRows) => {
       headerAlign: "right",
       align: "right",
       valueGetter: (value, row) => {
-        return formatMoney(row.sellPrice * row.quantity_cart);
+        return formatMoney(row.sell_price * row.quantity_cart);
       },
     },
     {

@@ -39,7 +39,7 @@ export const UpdateAttributePage = () => {
     (item) => item.id == attributes.attribute?.parent_id
   );
   const remainList = attributes.attributes.filter((item) => item.id != id);
-  console.log("attributes", attributes);
+  // console.log("attributes", attributes);
   // console.log("parent", parent);
 
   const CustomTextField = styled(TextField)({

@@ -121,7 +121,7 @@ export const DetailPage = () => {
                             <img
                               src={
                                 getImageUrl === ""
-                                  ? product.product?.imageUrl
+                                  ? product.product?.image_url
                                   : getImageUrl
                               }
                               className="size-full object-cover"
@@ -146,7 +146,7 @@ export const DetailPage = () => {
                               sx={{ gap: "5px", p: "8px" }}
                               dangerouslySetInnerHTML={{
                                 __html: decodeUnicode(
-                                  product.product?.shortDescription
+                                  product.product?.short_description
                                 ),
                               }}
                             ></Stack>
@@ -237,7 +237,7 @@ export const DetailPage = () => {
                                   cursor: "pointer",
                                 }}
                               >
-                                {formatPrice.format(product.product?.sellPrice)}
+                                {formatPrice.format(product.product?.sell_price)}
                                 ₫
                               </Typography>
 
@@ -257,7 +257,7 @@ export const DetailPage = () => {
                                   }}
                                 >
                                   {formatPrice.format(
-                                    product.product?.supplierRetailPrice
+                                    product.product?.supplier_retail_price
                                   )}
                                   ₫
                                 </Typography>
@@ -265,7 +265,7 @@ export const DetailPage = () => {
                                   variant="captiontext"
                                   sx={{ color: "error.main" }}
                                 >
-                                  - {product.product?.discountAmount}%
+                                  - {product.product?.discount_amount}%
                                 </Typography>
                               </Stack>
                             </Stack>

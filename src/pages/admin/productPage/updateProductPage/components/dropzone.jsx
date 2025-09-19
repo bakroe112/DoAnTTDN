@@ -13,9 +13,11 @@ import { useDropzone } from "react-dropzone";
 import ClearIcon from "@mui/icons-material/Clear";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
-export const Dropzone = () => {
+export const Dropzone = ({ images }) => {
   const [files, setFiles] = React.useState([]);
-
+  React.useEffect(() => {
+    if (images) setFiles(images);
+  }, [images]);
   const onDrop = React.useCallback((acceptedFiles) => {
     setFiles((preFiles) => {
       const newFile = acceptedFiles.filter(
@@ -39,33 +41,51 @@ export const Dropzone = () => {
   };
 
   // console.log("files", files);
+
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
-  const renderFiles = files.map((file) => (
-    <Box sx={{ position: "relative" }}>
-      <Avatar
-        src={URL.createObjectURL(file)}
-        sx={{ height: "90px", width: "90px", borderRadius: "10px" }}
-      />
-      <Box sx={{ position: "absolute", top: 2, right: 4 }}>
-        <IconButton
-          sx={{
-            color: "white",
-            bgcolor: alpha("#161C24", 0.6),
-            height: "20px",
-            width: "20px",
-            ":hover": {
-              bgcolor: alpha("#161C24", 0.8),
-            },
-          }}
-          onClick={() => handleDeleteImage(file)}
-        >
-          <ClearIcon sx={{ fontSize: "12px" }} />
-        </IconButton>
-      </Box>
-      {/* {file.path} - {file.name} - {file.size} bytes - {file.lastModified}
+  const renderFiles = files.map((file) => {
+    let src = "";
+
+    if (file instanceof File) {
+      // Ảnh mới drop từ máy
+      src = URL.createObjectURL(file);
+    } else if (typeof file === "string") {
+      // Trường hợp push string trực tiếp
+      src = file;
+    } else if (file && typeof file === "object" && file.url) {
+      // Object từ server (Cloudinary response)
+      src = file.url;
+    } else {
+      console.warn("Unknown file format:", file);
+      return null;
+    }
+    return (
+      <Box sx={{ position: "relative" }}>
+        <Avatar
+          src={src}
+          sx={{ height: "90px", width: "90px", borderRadius: "10px" }}
+        />
+        <Box sx={{ position: "absolute", top: 2, right: 4 }}>
+          <IconButton
+            sx={{
+              color: "white",
+              bgcolor: alpha("#161C24", 0.6),
+              height: "20px",
+              width: "20px",
+              ":hover": {
+                bgcolor: alpha("#161C24", 0.8),
+              },
+            }}
+            onClick={() => handleDeleteImage(file)}
+          >
+            <ClearIcon sx={{ fontSize: "12px" }} />
+          </IconButton>
+        </Box>
+        {/* {file.path} - {file.name} - {file.size} bytes - {file.lastModified}
       {console.log("file", file)} */}
-    </Box>
-  ));
+      </Box>
+    );
+  });
   return (
     <Box>
       <Stack
@@ -114,7 +134,6 @@ export const Dropzone = () => {
           </Typography>
         </Stack>
       </Stack>
-      {console.log("files", files)}
       {files.length > 0 && (
         <Stack spacing={1}>
           <Stack direction="row" spacing={1} py="18px">

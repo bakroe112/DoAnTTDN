@@ -18,8 +18,6 @@ import { useNavigate } from "react-router-dom";
 
 function RenderProduct(props) {
   const { value, row } = props;
-  // console.log("image_url", row.imageUrl);
-  // console.log("name", row.name);
 
   return (
     <Box
@@ -31,7 +29,7 @@ function RenderProduct(props) {
         paddingRight: "12px",
       }}
     >
-      <img src={row.imageUrl} className="w-[70px] h-[70px] rounded-[12px]" />
+      <img src={row.image_url} className="w-[70px] h-[70px] rounded-[12px]" />
       <Typography
         variant="subtitle2"
         sx={{
@@ -118,7 +116,7 @@ function RenderAction(props) {
         <MenuList>
           <MenuItem
             sx={{ gap: "10px", alignItems: "center" }}
-            onClick={() => navigate(row.sku)}
+            onClick={() => navigate(`/admin/products/update/${row.sku}`)}
           >
             <Icon
               icon="material-symbols-light:edit-rounded"
@@ -128,9 +126,7 @@ function RenderAction(props) {
             Edit
           </MenuItem>
           <MenuItem
-            onClick={() =>
-              dispatch(deleteProduct(row.sku, () => console.log("Delete")))
-            }
+            onClick={() => dispatch(deleteProduct(row.sku))}
             sx={{ gap: "10px", alignItems: "center" }}
           >
             <Icon
@@ -162,7 +158,7 @@ const DataGridHeader = () => {
       renderCell: RenderDateTime,
     },
     {
-      field: "sellPrice",
+      field: "sell_price",
       headerName: "Price",
       width: 120,
       valueGetter: (value) => value,

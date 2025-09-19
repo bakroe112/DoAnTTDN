@@ -66,10 +66,18 @@ class ProductController extends Controller
 
             $products->whereHas('attributes', function ($q) use ($attributesName, $attributesValue) {
                 if ($attributesName) {
-                    $q->whereIn('name', 'like', "%{$attributesName}%");
+                    $q->where(function ($query) use ($attributesName) {
+                        foreach ($attributesName as $attr) {
+                            $query->orWhere('name', 'like', "%{$attr}%");
+                        }
+                    });
                 }
                 if ($attributesValue) {
-                    $q->whereIn('value', 'like', "%{$attributesValue}%");
+                    $q->where(function ($query) use ($attributesValue) {
+                        foreach ($attributesValue as $attr) {
+                            $query->orWhere('value', 'like', "%{$attr}%");
+                        }
+                    });
                 }
             });
         }
@@ -151,7 +159,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, $sku)
     {
-        $product = Product::where('sku', $sku)->first();
+        $product = Product::where('sku', $sku)->firstOrFail();
 
         $product->update([
             'sku' => $request->sku,
@@ -166,8 +174,8 @@ class ProductController extends Controller
             'brand_logo' => $request->brand_logo,
             'image_url' => $request->image_url,
         ]);
-        $product->categories()->sync($request->categories);
-        $product->attributes()->sync($request->input('attributes'));
+        $product->categories()->sync((array) $request->categories);
+        $product->attributes()->sync((array) $request->input('attributes'));
 
         if ($request->has('images')) {
             // cách 1: xoá hết ảnh cũ, thêm lại từ đầu

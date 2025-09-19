@@ -26,7 +26,7 @@ export const ProductCard = ({ item, radius, height, width }) => {
       }}
     >
       <img
-        src={item.imageUrl}
+        src={item.image_url}
         width="100%"
         height="100%"
         className="object-contain hover:scale-105 transition duration-300 cursor-pointer"
@@ -47,7 +47,7 @@ export const ProductCard = ({ item, radius, height, width }) => {
           }}
           onClick={() => navigate(`/shop/${item.sku}`)}
         >
-          {item.brandName}
+          {item.brand_name}
         </Typography>
         <Typography
           variant="captiontext"
@@ -71,7 +71,7 @@ export const ProductCard = ({ item, radius, height, width }) => {
             sx={{ color: "primary.main", fontWeight: 800, cursor: "pointer" }}
             onClick={() => navigate(`/shop/${item.sku}`)}
           >
-            {formatted.format(item.sellPrice)} ₫
+            {formatted.format(item.sell_price)} ₫
           </Typography>
 
           <Stack
@@ -83,10 +83,10 @@ export const ProductCard = ({ item, radius, height, width }) => {
               variant="captiontext"
               sx={{ color: "text.disabled", textDecoration: " line-through" }}
             >
-              {formatted.format(item.supplierRetailPrice)} ₫
+              {formatted.format(item.supplier_retail_price)} ₫
             </Typography>
             <Typography variant="captiontext" sx={{ color: "error.main" }}>
-              -{item.discountAmount}%
+              -{item.discount_amount}%
             </Typography>
           </Stack>
         </Stack>

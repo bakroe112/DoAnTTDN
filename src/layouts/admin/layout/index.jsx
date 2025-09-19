@@ -1,13 +1,17 @@
-import { Box, IconButton, Stack, TextField, Tooltip } from "@mui/material";
 import {
-  Account,
-  DashboardLayout,
-  PageContainer,
-  ThemeSwitcher,
-} from "@toolpad/core";
+  Box,
+  CircularProgress,
+  IconButton,
+  Stack,
+  TextField,
+  Tooltip,
+} from "@mui/material";
+import { DashboardLayout, PageContainer, ThemeSwitcher } from "@toolpad/core";
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProduct, getShopProduct } from "@/store/product/Action";
 
 const SearchTool = () => {
   return (
@@ -44,6 +48,18 @@ const SearchTool = () => {
 };
 
 export const AdminLayout = () => {
+  const dispatch = useDispatch();
+  const products = useSelector((store) => store.products);
+  const path = useLocation();
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [path.pathname]);
+
+  React.useEffect(() => {
+    dispatch(getAllProduct());
+  }, [path.search]);
+
   return (
     <DashboardLayout
       slots={{
@@ -51,7 +67,20 @@ export const AdminLayout = () => {
       }}
     >
       <PageContainer>
-        <Outlet />
+        {products.loading ? (
+          <Stack
+            sx={{
+              width: "100%",
+              height: "100vh",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <CircularProgress />
+          </Stack>
+        ) : (
+          <Outlet />
+        )}
       </PageContainer>
     </DashboardLayout>
   );

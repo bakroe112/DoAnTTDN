@@ -17,9 +17,8 @@ import StarterKit from "@tiptap/starter-kit";
 import Heading from "@tiptap/extension-heading";
 import Placeholder from "@tiptap/extension-placeholder";
 import React from "react";
-import classNames from "classnames";
 
-export const TipTapEditor = () => {
+export const TipTapEditor = ({ description }) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -35,9 +34,14 @@ export const TipTapEditor = () => {
         placeholder: "Write something …",
       }),
     ],
-    content: "",
+    content: description ? description : "",
   });
-
+  React.useEffect(() => {
+    if (editor && description) {
+      editor.commands.setContent(description);
+    }
+  }, [description, editor]);
+  
   const [typography, setTypography] = React.useState("0");
 
   const handleChange = (event) => {

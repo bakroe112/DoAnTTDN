@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Chip,
+  CircularProgress,
   Collapse,
   Divider,
   FormControl,
@@ -25,25 +26,12 @@ import React from "react";
 import { TipTapEditor } from "./components/tipTapEditor";
 import { Dropzone } from "./components/dropzone";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
-const CustomTextField = styled(TextField)({
-  "& label.Mui-focused": {
-    color: "black",
-  },
-  "& .MuiOutlinedInput-root": {
-    "&.Mui-focused fieldset": {
-      borderColor: "black",
-    },
-  },
-  // Ẩn nút tăng giảm của Chrome, Safari, Edge
-  "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
-    WebkitAppearance: "none",
-    margin: 0,
-  },
-  // "& .MuiInputLabel-root": {
-  //   color: "gray",
-  // },
-});
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getProductByKey, updateProduct } from "@/store/product/Action";
+import { getCategoryTree } from "@/store/category/Action";
+import { getAttributeTree } from "@/store/attribute/Action";
+import { uploadToCloudinary } from "@/components/uploadToCloudinary";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -57,302 +45,578 @@ const MenuProps = {
 };
 
 export const UpdateProductPage = () => {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("" > "");
+  const products = useSelector((store) => store.products);
+  const categories = useSelector((store) => store.categories.categories);
+  const attributes = useSelector((store) => store.attributes.attributes);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [getCategories, setGetCategories] = React.useState([]);
+  const [getAttributes, setGetAttributes] = React.useState([]);
+  const [imageUrl, setImageUrl] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const [product, setProduct] = React.useState({});
+  const formatMoney = new Intl.NumberFormat("vi-VN");
+  const { id } = useParams();
 
-  const handleChange = (event) => {
+  React.useEffect(() => {
+    const price = Number(product?.supplier_retail_price) || 0;
+    const discount = Number(product?.discount_amount) || 0;
+
+    const finalPrice = price - (price * discount) / 100;
+    // setGetSellPrice(finalPrice);
+    setProduct((prev) => ({
+      ...prev,
+      sell_price: finalPrice,
+    }));
+  }, [product?.supplier_retail_price, product?.discount_amount]);
+
+  React.useEffect(() => {
+    dispatch(getProductByKey(id));
+    dispatch(getCategoryTree());
+    dispatch(getAttributeTree());
+  }, []);
+  React.useEffect(() => {
+    setProduct(products.product);
+  }, [products.product]);
+
+  const findCategoryPath = (categories, targetId, path = []) => {
+    for (const cate of categories) {
+      if (cate.id === targetId) {
+        return [...path, cate.id];
+      }
+      if (cate.children?.length > 0) {
+        const result = findCategoryPath(cate.children, targetId, [
+          ...path,
+          cate.id,
+        ]);
+        if (result) return result;
+      }
+    }
+    return null;
+  };
+  const handleChangeCategories = (event) => {
     const {
       target: { value },
     } = event;
-    setGetCategories(
+
+    const selectedIds = typeof value === "string" ? value.split(",") : value;
+    // Lấy cả cha + ông cho từng id
+    const fullIds = selectedIds.flatMap((id) =>
+      findCategoryPath(categories, id)
+    );
+    // Loại bỏ trùng lặp
+    const uniqueIds = [...new Set(fullIds)];
+    setGetCategories(selectedIds);
+    setProduct({ ...product, categories: uniqueIds });
+    console.log("uniqueIds", uniqueIds);
+  };
+  const handleChangeAttributes = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setGetAttributes(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+    setProduct({ ...product, attributes: value });
   };
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+
+    setLoading(true);
+    const imgUrl = await uploadToCloudinary(file);
+    setImageUrl(imgUrl);
+    setProduct((prev) => ({ ...prev, image_url: imgUrl }));
+    setLoading(false);
+  };
+  // console.log("product", products.product);
   return (
-    <Stack spacing={5}>
-      {/* Detail */}
-      <Accordion defaultExpanded>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Stack>
-            <Typography variant="h6">Details</Typography>
-            <Typography variant="subtitle1" color="text.disabled">
-              Title, decription, image,...
-            </Typography>
-          </Stack>
-        </AccordionSummary>
-        <Divider />
-        <AccordionDetails>
-          <Box
-            sx={{
-              padding: "18px",
-            }}
-          >
-            <Stack spacing={3}>
-              <CustomTextField variant="outlined" label="Product Name" />
-              <CustomTextField
-                variant="outlined"
-                label="Short Description"
-                InputProps={{
-                  style: {
-                    height: "160px",
-                  },
-                }}
-              />
-              <Box>
-                <Typography variant="subtitle1" pb="10px">
-                  Description
-                </Typography>
-                <TipTapEditor />
-              </Box>
-
-              <Box>
-                <Typography variant="subtitle1" pb="10px">
-                  Images
-                </Typography>
-                <Dropzone />
-              </Box>
-            </Stack>
-          </Box>
-        </AccordionDetails>
-      </Accordion>
-      {/* Properties */}
-      <Accordion defaultExpanded>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Stack>
-            <Typography variant="h6">Properties</Typography>
-            <Typography variant="subtitle1" color="text.disabled">
-              Additional attributes...
-            </Typography>
-          </Stack>
-        </AccordionSummary>
-        <Divider />
-
-        <AccordionDetails>
-          <Box
-            sx={{
-              padding: "18px",
-            }}
-          >
-            <Stack spacing={3}>
-              <Stack direction="row" spacing={2}>
-                <CustomTextField
-                  fullWidth
-                  variant="outlined"
-                  label="Product SKU"
-                  type="number"
-                  value={value}
-                  onChange={(e) => {
-                    const v = Number(e.target.value);
-                    if (v >= 0 || e.target.value === "") {
-                      // chỉ cho nhập số dương
-                      setValue(e.target.value === "" ? "" : v);
-                    }
-                  }}
-                />
-                <CustomTextField
-                  fullWidth
-                  variant="outlined"
-                  label="Quantity"
-                  type="number"
-                  placeholder="0"
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Stack>
-              <Stack direction="row" spacing={2}>
-                <FormControl sx={{ width: "100%" }}>
-                  <InputLabel>Category</InputLabel>
-                  <Select
-                    input={
-                      <OutlinedInput
-                        id="select-multiple-chip"
-                        label="Category"
-                      />
-                    }
-                    multiple
-                    value={getCategories}
-                    onChange={handleChange}
-                    renderValue={(selected) => (
-                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={value} />
-                        ))}
-                      </Box>
-                    )}
-                    MenuProps={MenuProps}
-                  >
-                    <ListSubheader>Category 1</ListSubheader>
-                    <MenuItem key="Category" value="Option 1">
-                      Option 1
-                    </MenuItem>
-                    <MenuItem key="Category" value="Option 2">
-                      Option 2
-                    </MenuItem>
-                    <ListSubheader>Category 2</ListSubheader>
-                    <MenuItem key="Category" value="Option 1">
-                      Option 1
-                    </MenuItem>
-                    <MenuItem key="Category" value="Option 2">
-                      Option 2
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl sx={{ width: "100%" }}>
-                  <InputLabel>Attribute</InputLabel>
-                  <Select
-                    input={
-                      <OutlinedInput
-                        id="select-multiple-chip"
-                        label="Category"
-                      />
-                    }
-                    multiple
-                    value={getCategories}
-                    onChange={handleChange}
-                    renderValue={(selected) => (
-                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={value} />
-                        ))}
-                      </Box>
-                    )}
-                    MenuProps={MenuProps}
-                  >
-                    <ListSubheader>Attribute 1</ListSubheader>
-                    <MenuItem key="Attribute" value="Option 1">
-                      Option 1
-                    </MenuItem>
-                    <MenuItem key="Attribute" value="Option 2">
-                      Option 2
-                    </MenuItem>
-                    <ListSubheader>Attribute 2</ListSubheader>
-                    <MenuItem key="Attribute" value="Option 1">
-                      Option 1
-                    </MenuItem>
-                    <MenuItem key="Attribute" value="Option 2">
-                      Option 2
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-              </Stack>
-              <FormControl sx={{ width: "100%" }}>
-                <InputLabel>Brand</InputLabel>
-                <Select
-                  input={
-                    <OutlinedInput id="select-multiple-chip" label="Category" />
-                  }
-                  multiple
-                  value={getCategories}
-                  onChange={handleChange}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={MenuProps}
-                >
-                  <MenuItem key="Attribute" value="Option 1">
-                    Option 1
-                  </MenuItem>
-                  <MenuItem key="Attribute" value="Option 2">
-                    Option 2
-                  </MenuItem>
-                </Select>
-              </FormControl>
-            </Stack>
-          </Box>
-        </AccordionDetails>
-      </Accordion>
-      {/* Prices */}
-      <Accordion defaultExpanded>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Stack>
-            <Typography variant="h6">Prices</Typography>
-            <Typography variant="subtitle1" color="text.disabled">
-              Price related inputs
-            </Typography>
-          </Stack>
-        </AccordionSummary>
-        <Divider />
-
-        <AccordionDetails>
-          <Box
-            sx={{
-              padding: "18px",
-            }}
-          >
-            <Stack spacing={3}>
-              <CustomTextField
-                fullWidth
-                variant="outlined"
-                label="Regular price"
-                type="number"
-                placeholder="0"
-                InputLabelProps={{ shrink: true }}
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">VND</InputAdornment>
-                    ),
-                  },
-                }}
-              />
-              <CustomTextField
-                fullWidth
-                variant="outlined"
-                label="Discount"
-                type="number"
-                placeholder="0"
-                InputLabelProps={{ shrink: true }}
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">%</InputAdornment>
-                    ),
-                  },
-                }}
-              />
-              <CustomTextField
-                fullWidth
-                variant="outlined"
-                label="Sale price"
-                type="number"
-                placeholder="0"
-                InputLabelProps={{ shrink: true }}
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">VND</InputAdornment>
-                    ),
-                  },
-                }}
-              />
-            </Stack>
-          </Box>
-        </AccordionDetails>
-      </Accordion>
-      {/* Submit Button */}
-      <Stack direction="row" sx={{ justifyContent: "end", pb: "40px" }}>
-        <Button
-          size="large"
-          variant="outlined"
-          color="primary.text"
+    <>
+      {products.loading_product ? (
+        <Stack
           sx={{
-            textTransform: "none",
-            fontWeight: 600,
-            transition: "0.3s ease-in-out",
-            ":hover": {
-              backgroundColor: "text.primary",
-              color: "background.paper",
-            },
+            width: "100%",
+            height: "100vh",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          Create Product
-        </Button>
-      </Stack>
-    </Stack>
+          <CircularProgress />
+        </Stack>
+      ) : (
+        <Stack spacing={5}>
+          {/* Detail */}
+          <Accordion defaultExpanded>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Stack>
+                <Typography variant="h6">Details</Typography>
+                <Typography variant="subtitle1" color="text.disabled">
+                  Title, decription, image,...
+                </Typography>
+              </Stack>
+            </AccordionSummary>
+            <Divider />
+            <AccordionDetails>
+              <Box
+                sx={{
+                  padding: "18px",
+                }}
+              >
+                <Stack spacing={3}>
+                  <Box>
+                    {product?.image_url ? (
+                      <img
+                        src={product?.image_url}
+                        style={{ width: "60%", borderRadius: "8px" }}
+                      />
+                    ) : (
+                      imageUrl && (
+                        <Box mb={2}>
+                          {loading ? (
+                            ""
+                          ) : (
+                            <img
+                              src={imageUrl}
+                              style={{ width: "60%", borderRadius: "8px" }}
+                            />
+                          )}
+                        </Box>
+                      )
+                    )}
+                    <Button
+                      variant="outlined"
+                      component="label"
+                      size="large"
+                      color="primary.text"
+                      sx={{
+                        textTransform: "none",
+                        fontWeight: 600,
+                        transition: "0.3s ease-in-out",
+                        ":hover": {
+                          backgroundColor: "text.primary",
+                          color: "background.paper",
+                        },
+                        mt: "10px",
+                      }}
+                    >
+                      {loading ? "Uploading..." : "Choose Image"}
+
+                      <input
+                        type="file"
+                        hidden
+                        accept="image/*"
+                        onChange={handleFileChange}
+                      />
+                    </Button>
+                  </Box>
+                  <TextField
+                    variant="outlined"
+                    label="Product Name"
+                    value={product?.name}
+                    name={product?.name}
+                    onChange={(e) =>
+                      setProduct({ ...product, name: e.target.value })
+                    }
+                    sx={{
+                      "& label.Mui-focused": { color: "black" },
+                      "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                        borderColor: "black",
+                      },
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                  <TextField
+                    variant="outlined"
+                    label="Short Description"
+                    value={product?.short_description}
+                    name={product?.short_description}
+                    multiline
+                    minRows={6}
+                    onChange={(e) =>
+                      setProduct({
+                        ...product,
+                        short_description: e.target.value,
+                      })
+                    }
+                    sx={{
+                      "& label.Mui-focused": { color: "black" },
+                      "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                        borderColor: "black",
+                      },
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                  <Box>
+                    <Typography variant="subtitle1" pb="10px">
+                      Description
+                    </Typography>
+                    <TipTapEditor
+                      onChange={(html) =>
+                        setProduct({ ...product, description: html })
+                      }
+                      description={product?.description}
+                    />
+                  </Box>
+
+                  <Box>
+                    <Typography variant="subtitle1" pb="10px">
+                      Images
+                    </Typography>
+                    <Dropzone
+                      onFilesChange={(urls) => {
+                        setProduct((prev) => ({ ...prev, images: urls }));
+                      }}
+                      images={product?.images}
+                    />
+                  </Box>
+                </Stack>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+          {/* Properties */}
+          <Accordion defaultExpanded>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Stack>
+                <Typography variant="h6">Properties</Typography>
+                <Typography variant="subtitle1" color="text.disabled">
+                  Additional attributes...
+                </Typography>
+              </Stack>
+            </AccordionSummary>
+            <Divider />
+
+            <AccordionDetails>
+              <Box
+                sx={{
+                  padding: "18px",
+                }}
+              >
+                <Stack spacing={3}>
+                  <Stack direction="row" spacing={2}>
+                    <TextField
+                      fullWidth
+                      disabled
+                      variant="outlined"
+                      label="Product SKU"
+                      type="number"
+                      value={product?.sku}
+                      name={product?.sku}
+                      sx={{
+                        "& label.Mui-focused": { color: "black" },
+                        "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                          borderColor: "black",
+                        },
+                        "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                          {
+                            WebkitAppearance: "none",
+                            margin: 0,
+                          },
+                      }}
+                      onChange={(e) => {
+                        setProduct({ ...product, sku: e.target.value });
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      label="Quantity"
+                      type="number"
+                      value={product?.quantity}
+                      //  value={product?.name}
+                      name={product?.quantity}
+                      placeholder="0"
+                      sx={{
+                        "& label.Mui-focused": { color: "black" },
+                        "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                          borderColor: "black",
+                        },
+                        "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                          {
+                            WebkitAppearance: "none",
+                            margin: 0,
+                          },
+                      }}
+                      onChange={(e) => {
+                        setProduct({ ...product, quantity: e.target.value });
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Stack>
+                  <Stack direction="row" spacing={2}>
+                    <FormControl sx={{ width: "100%" }}>
+                      <InputLabel>Category</InputLabel>
+                      <Select
+                        input={
+                          <OutlinedInput
+                            id="select-multiple-chip"
+                            label="Category"
+                          />
+                        }
+                        multiple
+                        value={getCategories}
+                        onChange={handleChangeCategories}
+                        renderValue={(selected) => (
+                          <Box
+                            sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
+                          >
+                            {selected.map((id) => {
+                              // tìm name theo id
+                              let label = "";
+                              categories.forEach((cate) => {
+                                cate.children.forEach((item) => {
+                                  item.children.forEach((i) => {
+                                    if (i.id === id) {
+                                      label = i.name;
+                                    }
+                                  });
+                                });
+                              });
+                              return <Chip key={id} label={label} />;
+                            })}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        {categories?.flatMap((cate) =>
+                          cate.children?.flatMap((item) => [
+                            <ListSubheader key={item.name}>
+                              {item.name}
+                            </ListSubheader>,
+                            ...item.children.map((i) => (
+                              <MenuItem key={i.name} value={i.id}>
+                                {i.name}
+                              </MenuItem>
+                            )),
+                          ])
+                        )}
+                      </Select>
+                    </FormControl>
+                    <FormControl sx={{ width: "100%" }}>
+                      <InputLabel>Attribute</InputLabel>
+                      <Select
+                        input={
+                          <OutlinedInput
+                            id="select-multiple-chip"
+                            label="Attribute"
+                          />
+                        }
+                        multiple
+                        value={getAttributes}
+                        onChange={handleChangeAttributes}
+                        renderValue={(selected) => (
+                          <Box
+                            sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
+                          >
+                            {selected.map((id) => {
+                              // tìm name theo id
+                              let label = "";
+                              attributes.forEach((attr) => {
+                                attr.children.forEach((item) => {
+                                  if (item.id === id) {
+                                    label = item.value;
+                                  }
+                                });
+                              });
+                              return <Chip key={id} label={label} />;
+                            })}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        {attributes?.flatMap((attr) =>
+                          attr.children?.flatMap((item) => [
+                            <ListSubheader key={item.name}>
+                              {item.name}
+                            </ListSubheader>,
+                            <MenuItem key={item.value} value={item.id}>
+                              {item.value}
+                            </MenuItem>,
+                          ])
+                        )}
+                      </Select>
+                    </FormControl>
+                  </Stack>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label="Brand"
+                    value={product?.brand_name}
+                    name={product?.brand_name}
+                    onChange={(e) =>
+                      setProduct({ ...product, brand_name: e.target.value })
+                    }
+                    sx={{
+                      "& label.Mui-focused": { color: "black" },
+                      "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                        borderColor: "black",
+                      },
+                    }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Stack>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+          {/* Prices */}
+          <Accordion defaultExpanded>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Stack>
+                <Typography variant="h6">Prices</Typography>
+                <Typography variant="subtitle1" color="text.disabled">
+                  Price related inputs
+                </Typography>
+              </Stack>
+            </AccordionSummary>
+            <Divider />
+
+            <AccordionDetails>
+              <Box
+                sx={{
+                  padding: "18px",
+                }}
+              >
+                <Stack spacing={3}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label="Regular price"
+                    type="text"
+                    value={formatMoney.format(
+                      product?.supplier_retail_price || 0
+                    )}
+                    name={product?.supplier_retail_price}
+                    onChange={(e) => {
+                      const rawValue = e.target.value.replace(/\D/g, "");
+                      setProduct({
+                        ...product,
+                        supplier_retail_price: rawValue,
+                      });
+                    }}
+                    sx={{
+                      "& label.Mui-focused": { color: "black" },
+                      "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                        borderColor: "black",
+                      },
+                      "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                        {
+                          WebkitAppearance: "none",
+                          margin: 0,
+                        },
+                    }}
+                    placeholder="0"
+                    InputLabelProps={{ shrink: true }}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">VND</InputAdornment>
+                        ),
+                      },
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label="Discount"
+                    type="text"
+                    value={product?.discount_amount}
+                    name={product?.discount_amount}
+                    onChange={(e) =>
+                      setProduct({
+                        ...product,
+                        discount_amount: e.target.value,
+                      })
+                    }
+                    sx={{
+                      "& label.Mui-focused": { color: "black" },
+                      "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                        borderColor: "black",
+                      },
+                      "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                        {
+                          WebkitAppearance: "none",
+                          margin: 0,
+                        },
+                    }}
+                    placeholder="0"
+                    InputLabelProps={{ shrink: true }}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">%</InputAdornment>
+                        ),
+                      },
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label="Sale price"
+                    type="text"
+                    value={formatMoney.format(product?.sell_price || 0)}
+                    name={product?.sell_price}
+                    onChange={(e) => {
+                      const rawValue = e.target.value.replace(/\D/g, "");
+                      setProduct({
+                        ...product,
+                        sell_price: rawValue,
+                      });
+                    }}
+                    sx={{
+                      "& label.Mui-focused": { color: "black" },
+                      "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                        borderColor: "black",
+                      },
+                      "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                        {
+                          WebkitAppearance: "none",
+                          margin: 0,
+                        },
+                    }}
+                    placeholder="0"
+                    InputLabelProps={{ shrink: true }}
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        startAdornment: (
+                          <InputAdornment position="start">VND</InputAdornment>
+                        ),
+                      },
+                    }}
+                  />
+                </Stack>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+          {/* Submit Button */}
+          <Stack direction="row" sx={{ justifyContent: "end", pb: "40px" }}>
+            <Button
+              size="large"
+              variant="outlined"
+              type="submit"
+              color="primary.text"
+              sx={{
+                textTransform: "none",
+                fontWeight: 600,
+                transition: "0.3s ease-in-out",
+                ":hover": {
+                  backgroundColor: "text.primary",
+                  color: "background.paper",
+                },
+              }}
+              onClick={() => {
+                // console.log("product update", product);
+                dispatch(updateProduct(product, id));
+                setProduct({});
+                products.loading === false && navigate("/admin/products");
+              }}
+            >
+              Update Product
+            </Button>
+          </Stack>
+        </Stack>
+      )}
+    </>
   );
 };

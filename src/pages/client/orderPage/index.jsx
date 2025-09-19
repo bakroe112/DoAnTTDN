@@ -161,7 +161,7 @@ export const CheckoutPage = () => {
 
 const sumPrice = (products) => {
   return products?.reduce(
-    (total, item) => total + item.sellPrice * item.quantity_cart,
+    (total, item) => total + item.sell_price * item.quantity_cart,
     0
   );
 };
