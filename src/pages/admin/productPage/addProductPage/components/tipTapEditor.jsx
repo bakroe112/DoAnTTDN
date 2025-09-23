@@ -14,7 +14,7 @@ import Image from "@tiptap/extension-image";
 import Highlight from "@tiptap/extension-highlight";
 import TextAlign from "@tiptap/extension-text-align";
 import StarterKit from "@tiptap/starter-kit";
-import Heading from "@tiptap/extension-heading";
+// import Heading from "@tiptap/extension-heading";
 import Placeholder from "@tiptap/extension-placeholder";
 import React from "react";
 
@@ -24,9 +24,6 @@ export const TipTapEditor = ({ onChange }) => {
       StarterKit,
       Highlight,
       Image,
-      Heading.configure({
-        levels: [1, 2, 3, 4, 5, 6],
-      }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),

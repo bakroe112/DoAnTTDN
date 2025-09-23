@@ -131,7 +131,7 @@ export const HeaderSection = () => {
               color: "text.secondary",
             }}
           >
-            {itemSections.map((item) => (
+            {itemSections.map((item,index) => (
               <Typography
                 variant="caption"
                 sx={{
@@ -141,6 +141,7 @@ export const HeaderSection = () => {
                   cursor: "pointer",
                 }}
                 onClick={() => navigate(`/shop?categories=${item.title}`)}
+                key={index}
               >
                 {item.title}
               </Typography>

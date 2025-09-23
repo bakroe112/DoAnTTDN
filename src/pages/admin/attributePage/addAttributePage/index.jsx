@@ -149,8 +149,8 @@ export const AddAttributePage = () => {
             }}
             onClick={() => {
               dispatch(addNewAttribute(attribute));
-              // attributes.loading === false && navigate("/admin/attributes");
-              setAttributes({ ...attribute, value: "", parent_id: "" });
+              attributes.loading === false && navigate("/admin/attributes");
+              // setAttributes({ value: "", parent_id: "" });
             }}
           >
             Create Attribute

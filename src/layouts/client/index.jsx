@@ -22,7 +22,8 @@ export const ClientLayout = () => {
 
   React.useEffect(() => {
     dispatch(getCategoryTree());
-  }, [path.search]);
+  }, []);
+
   // console.log("products: ", products);
   return (
     <>

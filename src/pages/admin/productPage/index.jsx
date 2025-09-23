@@ -18,7 +18,11 @@ import { getAllProduct } from "@/store/product/Action";
 
 export const AdminProductPage = () => {
   const products = useSelector((store) => store.products);
+  const dispatch = useDispatch();
 
+  React.useEffect(() => {
+    dispatch(getAllProduct());
+  }, []);
   // console.log("products", products);
 
   const [paginationModel, setPaginationModel] = React.useState({
@@ -55,7 +59,7 @@ export const AdminProductPage = () => {
           checkboxSelection
           disableRowSelectionOnClick
           getRowId={(row) => row.sku}
-          rows={products.products}
+          rows={products.all}
           columns={DataGridHeader()}
           rowHeight={100}
           initialState={{

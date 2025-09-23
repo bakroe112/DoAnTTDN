@@ -9,12 +9,13 @@ export const ProductSection = ({ title, colorFont, flag }) => {
   const [onHover, setonHover] = useState(false);
   const product = useSelector((store) => store.products);
 
-  const filteredProducts = product?.products.filter((p) =>
+  const filteredProducts = product?.all.filter((p) =>
     p?.categories.some((cat) =>
-      title ? cat.name?.toLowerCase().includes(title.toLowerCase()) : false
+      title ? cat.name?.toLowerCase().startsWith(title.toLowerCase()) : false
     )
   );
-  useEffect(() => {}, []);
+
+  // useEffect(() => {}, []);
   return (
     <Stack>
       <Stack

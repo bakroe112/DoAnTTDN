@@ -44,6 +44,7 @@ export const CategoryListItem = ({ sx, borderRadius }) => {
             index={index}
             setOnHover={setOnHover}
             navigate={navigate}
+            key={index}
           />
         ))}
       </Stack>
@@ -128,7 +129,7 @@ export const CategoryCardItem = ({ item, navigate }) => {
           gap: "5px",
         }}
       >
-        {item.children.map((item) => (
+        {item.children.map((item, index) => (
           <Stack
             sx={{
               "&:hover": {
@@ -136,11 +137,13 @@ export const CategoryCardItem = ({ item, navigate }) => {
               },
             }}
             onClick={() => navigate(`/shop?categories=${item.name}`)}
+            key={index}
           >
             <Typography
               sx={{
                 fontSize: "15px",
               }}
+              key={index}
             >
               {item.name}
             </Typography>

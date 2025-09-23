@@ -18,16 +18,13 @@ class ProductController extends Controller
         $sort = $request->get("sort");
         $asc = $request->boolean("asc", false);
         $search = $request->get("search");
-        $paginate = $request->get("paginate", 8);
+        $paginate = $request->get("paginate", 10);
         $brand = $request->get("brand");
 
         $attributeName = $request->get("attribute_name");
         $attributeValue = $request->get("attribute_value");
 
-        $products = Product::with(['images', 'categories', 'attributes'])
-            ->when($request->search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%");
-            });
+        $products = Product::with(['images', 'categories', 'attributes']);
 
         if ($category) {
             $categories = explode(',', $category);
@@ -98,20 +95,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // $validated = $request->validate([
-        //     'sku' => 'required|unique:products,sku',
-        //     'name' => 'required|string|max:255',
-        //     'supplier_retail_price' => 'nullable|numeric',
-        //     'latest_price' => 'nullable|numeric',
-        //     'discount_amount' => 'nullable|numeric',
-        //     'discount_percent' => 'nullable|numeric',
-        //     'sell_price' => 'nullable|numeric',
-        //     'description' => 'nullable|string',
-        //     'short_description' => 'nullable|string',
-        //     'brand_name' => 'nullable|string|max:255',
-        //     'brand_logo' => 'nullable|string|max:2048',
-        //     'image_url' => 'nullable|string|max:2048',
-        // ]);
 
         $product = Product::create([
             'sku' => $request->sku,

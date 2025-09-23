@@ -67,8 +67,8 @@ export const ProductSection = () => {
                 <Typography>Đã hết sản phẩm mất rồi...</Typography>
               ) : (
                 <>
-                  {products.products.map((item) => (
-                    <Grid size="5">
+                  {products.products.map((item, index) => (
+                    <Grid size="5" key={index}>
                       <ProductCard
                         item={item}
                         height={460}

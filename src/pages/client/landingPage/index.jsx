@@ -18,15 +18,16 @@ import { ProductSection } from "./section/productSection";
 import { Icon } from "@iconify-icon/react";
 import { ProductCard } from "@/components/productSlider/productCard";
 import { HeaderHelmet } from "@/components/header";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { categoryListIcon } from "@/components/categoryList/CategoryListItem";
 import { useNavigate } from "react-router-dom";
+import { getAllProduct } from "@/store/product/Action";
 const categoryMap = [
   "Laptop",
   "Apple",
   "Màn hình",
   "Gaming Gear",
-  "Camera - Phụ kiện",
+  "PC",
   "Điện gia dụng",
 ];
 export const LandingPage = () => {
@@ -34,7 +35,13 @@ export const LandingPage = () => {
   const categories = useSelector((store) => store.categories);
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
-  // console.log("product", products.products);
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch(getAllProduct());
+  }, []);
+
+  console.log("product", products);
 
   //tab handleChang
   const tabHandleChange = (e, newValue) => {
@@ -42,7 +49,7 @@ export const LandingPage = () => {
   };
 
   const currentCategory = categoryMap[value];
-  const filteredProducts = products?.products.filter((p) =>
+  const filteredProducts = products?.all.filter((p) =>
     p.categories?.some((cat) =>
       cat.name.toLowerCase().includes(currentCategory.toLowerCase())
     )
@@ -51,7 +58,6 @@ export const LandingPage = () => {
   const a11yProps = (index) => {
     return {
       id: `${index}`,
-      " ": `${index}`,
     };
   };
 
@@ -262,7 +268,7 @@ export const LandingPage = () => {
                         WebkitBoxOrient: "vertical",
                       }}
                     >
-                      Camera - Phụ kiện
+                      PC + Linh kiện
                     </Typography>
                     <Typography variant="captiontext" fontWeight="600">
                       Giảm sốc 70%
@@ -417,7 +423,7 @@ export const LandingPage = () => {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <ProductSection title="Apple" />
+          <ProductSection title="Sản phẩm Apple" />
         </Box>
 
         {/* Product slider */}
@@ -452,7 +458,7 @@ export const LandingPage = () => {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <ProductSection title="Laptop - Máy tính xách tay" />
+          <ProductSection title="Laptop" />
         </Box>
 
         {/* Ad image */}
@@ -474,21 +480,10 @@ export const LandingPage = () => {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <ProductSection title="Laptop văn " />
+          <ProductSection title="Linh kiện máy tính" />
         </Box>
 
-        {/* Product slider */}
-        <Box
-          sx={{
-            backgroundImage:
-              "url('https://lh3.googleusercontent.com/xskupSpD9GawQhJQMm7O6vs7CehOkGhsXUBc_n0PSO0ZT9dMECEzWeQsyDAMbk_BV-kupn3IYip2hD0xdkC7vn0jjhl6Tcc=w1232')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <ProductSection title="Gaming gear" />
-        </Box>
+    
 
         {/* Ad image */}
         <Box>
@@ -573,8 +568,8 @@ export const LandingPage = () => {
                     <Typography>Đã hết sản phẩm mất rồi...</Typography>
                   ) : (
                     <>
-                      {products.products.map((item) => (
-                        <Grid size="5">
+                      {products.products.map((item, index) => (
+                        <Grid size="5" key={index}>
                           <ProductCard
                             item={item}
                             height={460}

@@ -19,8 +19,14 @@ Route::apiResource('attributes', AttributeController::class);
 Route::apiResource('orders', OrderController::class);
 
 
+// Route::get("/all-products", function () {
+//     return ProductResource::collection(Product::all());
+// });
+
 Route::get("/all-products", function () {
-    return ProductResource::collection(Product::all());
+    return ProductResource::collection(
+        Product::with(['categories', 'images', 'attributes'])->get()
+    );
 });
 
 Route::get("/all-categories", function () {

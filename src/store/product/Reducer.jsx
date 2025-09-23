@@ -18,6 +18,7 @@ import {
 
 const initialState = {
   products: [],
+  all: [],
   loading: false,
   error: null,
   page: null,
@@ -26,12 +27,21 @@ const initialState = {
 const ProductReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_ALL_PRODUCTS_REQUEST:
+          return {
+        ...state,
+        loading_all_product: true,
+      };
     case ADD_NEW_PRODUCT_REQUEST:
     case GET_SHOP_REQUEST:
       return { ...state, loading: true, products: [] };
     case DELETE_PRODUCT_REQUEST:
       return { ...state, loading: true };
     case GET_ALL_PRODUCTS_SUCCESS:
+      return {
+        ...state,
+        loading_all_product: false,
+        all: action.payload,
+      };
     case DELETE_PRODUCT_SUCCESS:
       return {
         ...state,

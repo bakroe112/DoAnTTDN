@@ -127,8 +127,9 @@ export const DetailPage = () => {
                               className="size-full object-cover"
                             />
                             <Stack direction="row" sx={{ gap: "5px" }}>
-                              {product.product?.images.map((item) => (
+                              {product.product?.images.map((item, index) => (
                                 <Stack
+                                  key={index}
                                   sx={{
                                     ":hover": onHoverImage,
                                   }}
@@ -237,7 +238,9 @@ export const DetailPage = () => {
                                   cursor: "pointer",
                                 }}
                               >
-                                {formatPrice.format(product.product?.sell_price)}
+                                {formatPrice.format(
+                                  product.product?.sell_price
+                                )}
                                 ₫
                               </Typography>
 

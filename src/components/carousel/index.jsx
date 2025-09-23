@@ -62,6 +62,7 @@ export const EmblaCarousel = ({
               minWidth: 0,
               paddingLeft: `${space}px`,
             }}
+            key={index}
           >
             {children(item, index)}
           </Box>

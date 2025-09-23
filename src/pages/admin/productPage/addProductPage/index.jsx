@@ -344,7 +344,7 @@ export const AddProductPage = () => {
                           {item.name}
                         </ListSubheader>,
                         ...item.children.map((i) => (
-                          <MenuItem key={i.name} value={i.id}>
+                          <MenuItem key={i.id} value={i.id}>
                             {i.name}
                           </MenuItem>
                         )),
@@ -562,7 +562,7 @@ export const AddProductPage = () => {
           onClick={() => {
             console.log("product", product);
             dispatch(createProduct(product));
-            // setProduct({});
+            setProduct({});
             products.loading === false && navigate("/admin/products");
           }}
         >

@@ -12,7 +12,6 @@ import {
   OutlinedInput,
   Select,
   Stack,
-  styled,
   TextField,
   Typography,
 } from "@mui/material";
@@ -30,20 +29,10 @@ export const AddCategoryPage = () => {
   React.useEffect(() => {
     dispatch(getAllCategories());
   }, []);
-  console.log("categories", categories);
-  const CustomTextField = styled(TextField)({
-    "& label.Mui-focused": {
-      color: "black",
-    },
-    "& .MuiOutlinedInput-root": {
-      "&.Mui-focused fieldset": {
-        borderColor: "black",
-      },
-    },
-    // "& .MuiInputLabel-root": {
-    //   color: "gray",
-    // },
-  });
+
+  // console.log("categories.categories", categories.categories);
+  // console.log("categories", categories);
+
   const [getCategories, setGetCategories] = React.useState("");
 
   const handleChange = (event) => {
@@ -147,8 +136,8 @@ export const AddCategoryPage = () => {
             }}
             onClick={() => {
               dispatch(addNewCategory(category));
-              // categories.loading === false && navigate("/admin/categories");
-              setCategory({ ...category, name: "" });
+              categories.loading === false && navigate("/admin/categories");
+              setCategory({ name: "" });
             }}
           >
             Create Category

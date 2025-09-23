@@ -136,10 +136,10 @@ export const FilterSection = () => {
       <Stack>
         {ListCategory.map((cate) => (
           <>
-            {cate.children.slice(0, 1).map((item) => (
-              <Accordion defaultExpanded>
+            {cate.children.slice(0, 1).map((item, index) => (
+              <Accordion defaultExpanded key={index}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography fontSize="14px" fontWeight={600}>
+                  <Typography fontSize="14px" fontWeight={600} key={index}>
                     {item.name}
                   </Typography>
                 </AccordionSummary>
@@ -150,14 +150,16 @@ export const FilterSection = () => {
 
                     overflow: "hidden",
                   }}
+                  key={index}
                 >
                   <FormGroup
                     row
                     sx={{
                       "& .MuiTypography-root": { fontSize: "14px" },
                     }}
+                    key={index}
                   >
-                    {item.children.map((i) => (
+                    {item.children.map((i, index) => (
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -166,6 +168,7 @@ export const FilterSection = () => {
                           />
                         }
                         label={i.name}
+                        key={index}
                       />
                     ))}
                   </FormGroup>

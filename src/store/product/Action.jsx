@@ -49,7 +49,6 @@ export const getShopProduct = () => async (dispatch) => {
   }
 };
 
-
 export const getProductByKey = (key_name) => async (dispatch) => {
   dispatch({ type: GET_PRODUCT_REQUEST });
   try {
@@ -63,7 +62,6 @@ export const getProductByKey = (key_name) => async (dispatch) => {
     dispatch({ type: GET_PRODUCT_FAILURE, error: null });
   }
 };
-
 
 export const createProduct = (product, action) => async (dispatch) => {
   // dispatch({ type: GET_PRODUCT_REQUEST });
@@ -82,6 +80,7 @@ export const createProduct = (product, action) => async (dispatch) => {
         console.log(e);
       });
   } catch (error) {
+    console.error("Create product failed:", error.response?.data || error.message);
     dispatch({ type: ADD_NEW_PRODUCT_FAILURE, error: null });
   }
 };
