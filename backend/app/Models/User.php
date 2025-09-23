@@ -11,7 +11,11 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-
+    public function __construct($resource)
+    {
+        parent::__construct($resource);
+        $this->withoutWrapping();
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +25,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        // 'address',
+        // 'number'
     ];
 
     /**

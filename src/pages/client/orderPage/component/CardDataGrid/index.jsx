@@ -8,7 +8,7 @@ const CardDataGrid = () => {
   const { cart, setCart } = useStateContext();
   const [products, setProducts] = React.useState(cart.products);
   // console.log("Cart", cart);
-
+  console.log("cart", cart);
   React.useEffect(() => {
     setCart({ ...cart, products: products });
   }, [products]);

@@ -1,5 +1,4 @@
 import {
-  alpha,
   Box,
   Button,
   Divider,
@@ -15,8 +14,16 @@ import PersonIcon from "@mui/icons-material/Person";
 import PasswordIcon from "@mui/icons-material/Password";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
+import { useNavigate } from "react-router-dom";
 export const LoginPage = () => {
   const [change, setChange] = React.useState(false);
+  const [user, SetUser] = React.useState(false);
+  const navigate = useNavigate();
+  const checkAdmin = (user) => {
+    if (user.email == "admin@gmail.com" && user.password == "123") {
+      navigate("/admin");
+    }
+  };
   return (
     <Box sx={{ p: "20px 700px" }}>
       <Stack
@@ -36,9 +43,9 @@ export const LoginPage = () => {
               fullWidth
               size="small"
               label="Email"
-              // value={category?.name}
-              // name={category?.name}
-              // onChange={(e) => setCategory({ ...category, name: e.target.value })}
+              value={user?.email}
+              name={user?.email}
+              onChange={(e) => SetUser({ ...user, email: e.target.value })}
               sx={{
                 "& label.Mui-focused": { color: "black" },
                 "& .MuiOutlinedInput-root.Mui-focused fieldset": {
@@ -61,9 +68,9 @@ export const LoginPage = () => {
               size="small"
               label="Password"
               type="password"
-              // value={category?.name}
-              // name={category?.name}
-              // onChange={(e) => setCategory({ ...category, name: e.target.value })}
+              value={user?.password}
+              name={user?.password}
+              onChange={(e) => SetUser({ ...user, password: e.target.value })}
               sx={{
                 "& label.Mui-focused": { color: "black" },
                 "& .MuiOutlinedInput-root.Mui-focused fieldset": {
@@ -95,6 +102,10 @@ export const LoginPage = () => {
                 borderColor: "#888",
                 color: "text.primary",
                 fontSize: "18px",
+              }}
+              onClick={() => {
+                console.log("user", user);
+                checkAdmin(user);
               }}
             >
               Đăng nhập
@@ -179,7 +190,7 @@ export const LoginPage = () => {
               }}
               variant="standard"
             />
-            <TextField
+            {/* <TextField
               fullWidth
               size="small"
               label="Number"
@@ -208,7 +219,7 @@ export const LoginPage = () => {
                 },
               }}
               variant="standard"
-            />
+            /> */}
             <Stack direction="row" sx={{ alignContent: "center" }}>
               <Typography
                 sx={{ cursor: "pointer" }}

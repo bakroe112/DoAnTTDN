@@ -152,7 +152,7 @@ export const HeaderSection = () => {
             icon="solar:user-circle-linear"
             title1="Đăng nhập"
             title2="Đăng ký"
-            link=""
+            link="/login"
           />
           <HeaderSectionItem
             icon="solar:bell-linear"
