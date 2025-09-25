@@ -44,11 +44,11 @@ const bannerItems = [
 
 export const BannerSection = () => {
   return (
-    <Box component="section" width="100%" > 
+    <Box component="section" width="100%">
       <img
-        src="https://lh3.googleusercontent.com/lQNzRj1Dt-OWPIul2aA09f_Jx6SS2TXmdV_INbv_Smea7c5sh8zCB1RWw6xhxf-LBeZjxWnXsZdYgQv4TMkyJzWzmBh4h3JiPQ=w1920-rw"
+        src="public/image/header/1.jpg"
         alt=""
-        className="h-[56px] w-full object-cover"
+        className="h-[56px] w-full object-cover cursor-pointer"
       />
       <Stack
         direction="row"

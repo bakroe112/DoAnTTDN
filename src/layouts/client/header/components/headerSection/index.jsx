@@ -82,7 +82,7 @@ export const HeaderSection = () => {
         {isScrolled && (
           <Stack direction="row" gap="10px">
             <img
-              src="https://shopfront-cdn.tekoapis.com/static/phongvu/logo.svg"
+              src="/FlowerLogo.jpg"
               alt=""
               className="w-[35px] h-[35px] cursor-pointer"
               onClick={() => {
@@ -131,7 +131,7 @@ export const HeaderSection = () => {
               color: "text.secondary",
             }}
           >
-            {itemSections.map((item,index) => (
+            {itemSections.map((item, index) => (
               <Typography
                 variant="caption"
                 sx={{

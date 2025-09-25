@@ -45,7 +45,7 @@ export const ProductSection = ({ title, colorFont, flag }) => {
         >
           <Typography
             variant="body2"
-            sx={{ fontWeight: 600, color: "text.primary" }}
+            sx={{ fontWeight: 600, color: "background.paper" }}
           >
             Xem tất cả
           </Typography>

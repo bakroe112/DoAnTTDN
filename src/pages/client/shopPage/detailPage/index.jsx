@@ -54,7 +54,9 @@ export const DetailPage = () => {
     dispatch(getProductByKey(id));
   }, []);
   const [getImageUrl, setGetImageUrl] = useState("");
-  // console.log("product", product);
+  // console.log("product", product.product);
+  console.log("cart", cart);
+
   return (
     <>
       {product.loading_product == true ? (
@@ -429,7 +431,7 @@ export const DetailPage = () => {
                             }}
                           >
                             <img
-                              src="https://lh3.googleusercontent.com/qOnchEYD7No58bjEQs5pf_05IV-0DmoaCmEFXD007VHs5cn16LZ6PC98IlY3OiBL9UXsEwNzwiVHRrvSDMQ"
+                              src="/FlowerLogo.jpg"
                               className="size-full object-contain"
                             />
                           </Avatar>

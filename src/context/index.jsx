@@ -2,9 +2,7 @@ import React, { createContext, useContext } from "react";
 
 // tạo một kho dữ liệu chung mà nhiều component có thể truy cập được
 const StateContext = createContext({
-  product: null,
   cart: [],
-  setProduct: () => {},
   setCart: () => {},
 });
 
@@ -12,16 +10,16 @@ const StateContext = createContext({
 const ThemeContext = ({ children }) => {
   const savedCart = JSON.parse(localStorage.getItem("cart_user1")) || {
     products: [],
-    address: {
-      first_name: "",
-      last_name: "",
-      phone: 0,
-      street_address: "",
-      city: "",
-      state: "",
-      zip: "",
-      default: true,
-    },
+    // address: {
+    //   first_name: "",
+    //   last_name: "",
+    //   phone: 0,
+    //   street_address: "",
+    //   city: "",
+    //   state: "",
+    //   zip: "",
+    //   default: true,
+    // },
     // payment: {
     //   title: "Cash",
     //   description: "Pay with cash when your order is delivered.",
